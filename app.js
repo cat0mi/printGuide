@@ -65,7 +65,7 @@
   }
 
   function writeChecklistState() {
-    var result = { version: 3, lists: {} };
+    var result = { version: 4, lists: {} };
     document.querySelectorAll("[data-checklist]").forEach(function (list) {
       result.lists[list.dataset.checklist] = Array.from(list.querySelectorAll(".check-row")).map(function (row) {
         return row.classList.contains("checked");
@@ -96,7 +96,7 @@
     var saved = readChecklistState();
     document.querySelectorAll("[data-checklist]").forEach(function (list) {
       var rows = list.querySelectorAll(".check-row");
-      var state = saved.version === 3 && saved.lists ? saved.lists[list.dataset.checklist] : null;
+      var state = saved.version === 4 && saved.lists ? saved.lists[list.dataset.checklist] : null;
       if (Array.isArray(state)) {
         rows.forEach(function (row, index) {
           row.classList.toggle("checked", Boolean(state[index]));

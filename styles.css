@@ -232,7 +232,7 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .sidebar-bottom a:hover { color: var(--text); }
 .guide-content { width: 100%; max-width: 860px; padding: 48px 0 80px; }
 .guide-content.narrow { max-width: 800px; }
-.chapter-toc { position: sticky; top: 48px; padding-top: 0; transform: translateX(-48px); }
+.chapter-toc { position: sticky; top: 48px; padding-top: 0; }
 .chapter-toc > strong { display: block; margin-bottom: 16px; color: var(--muted-2); font-size: 11px; letter-spacing: .05em; }
 .chapter-toc nav { display: flex; flex-direction: column; }
 .toc-link { position: relative; min-height: 25px; padding-left: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 12px; line-height: 17px; }
@@ -399,6 +399,7 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .mobile-menu { display: none; }
 .toast { position: fixed; left: 50%; bottom: 30px; z-index: 100; max-width: calc(100vw - 32px); transform: translate(-50%, 18px); opacity: 0; pointer-events: none; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); box-shadow: var(--shadow); padding: 10px 14px; color: var(--text); font-size: 12px; transition: opacity .2s ease, transform .2s ease; }
 .toast.visible { opacity: 1; transform: translate(-50%, 0); }
+.load-error { max-width: 680px; margin: 80px auto; padding: 20px; color: var(--text); text-align: center; }
 
 @media (max-width: 1199px) {
   .home-header { grid-template-columns: 1fr minmax(280px, 360px) 1fr; padding: 0 48px; }
