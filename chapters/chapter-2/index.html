@@ -55,24 +55,7 @@
             <section class="checklist-card" id="quick-check-two">
               <div class="checklist-head"><h2><img src="assets/icons/check-square.svg" alt="" width="18" height="18" /> БЫСТРЫЙ ЧЕК-ЛИСТ ГЛАВЫ 2</h2><strong data-counter>0 из 16 (0%)</strong></div>
               <div class="progress-track"><span data-check-progress style="width: 2.5%"></span></div>
-              <div class="check-list" data-checklist="chapter-two-quick">
-                <button class="check-row" type="button"><span></span>Выбран правильный тип изделия.</button>
-                <button class="check-row" type="button"><span></span>Указан размер в сложенном и разложенном виде.</button>
-                <button class="check-row" type="button"><span></span>Количество сторон и страниц соответствует заданию.</button>
-                <button class="check-row" type="button"><span></span>Лицевая и оборотная стороны расположены правильно.</button>
-                <button class="check-row" type="button"><span></span>Выбран и согласован способ фальцовки.</button>
-                <button class="check-row" type="button"><span></span>Линии сгиба учтены в композиции.</button>
-                <button class="check-row" type="button"><span></span>Выбран способ скрепления.</button>
-                <button class="check-row" type="button"><span></span>Количество страниц подходит для выбранного скрепления.</button>
-                <button class="check-row" type="button"><span></span>Обложка и внутренние страницы подготовлены правильно.</button>
-                <button class="check-row" type="button"><span></span>Ширина корешка получена у типографии.</button>
-                <button class="check-row" type="button"><span></span>Учтены поля возле сгиба, корешка, скобы или пружины.</button>
-                <button class="check-row" type="button"><span></span>Фон продолжен на вылет.</button>
-                <button class="check-row" type="button"><span></span>Узкие рамки не расположены близко к краю.</button>
-                <button class="check-row" type="button"><span></span>Страницы передаются в правильном порядке.</button>
-                <button class="check-row" type="button"><span></span>Специальные виды отделки вынесены отдельно.</button>
-                <button class="check-row" type="button"><span></span>К файлу приложено превью готового изделия.</button>
-              </div>
+              <div class="check-list" data-checklist="chapter-2:quick"></div>
               <button class="reset-link" data-reset type="button">↻ Сбросить чек-лист</button>
             </section>
 
@@ -107,7 +90,7 @@
                 <div class="format-table">
                   <p><b>A3</b><span>297 × 420 мм</span></p><p><b>A4</b><span>210 × 297 мм</span></p>
                   <p><b>A5</b><span>148 × 210 мм</span></p><p><b>A6</b><span>105 × 148 мм</span></p>
-                  <p><b>DL</b><span>99 × 210 мм</span></p><p><b>Визитка</b><span>90 × 50 мм</span></p>
+                  <p><b>Еврофлаер</b><span>99 × 210 мм — распространённый формат, не путать с конвертом DL</span></p><p><b>Визитка</b><span>90 × 50 мм — распространённый, но не универсальный формат</span></p>
                 </div>
               </div>
             </section>
@@ -124,7 +107,7 @@
                 <div><button class="active" data-orientation type="button">↶ Переворот по длинной стороне</button><button data-orientation type="button">↷ Переворот по короткой стороне</button></div>
               </div>
               <h3 class="subheading">Проблема узких рамок у края</h3>
-              <p>Погрешность ножа при резке готовой продукции составляет до 1.5–2 мм. Рамки толщиной менее 4 мм, расположенные близко к краю, будут выглядеть несимметрично после резки.</p>
+              <p>Погрешность резки 1,5–2 мм и рамка от 4 мм — только распространённые ориентиры. Допуски и минимальную ширину рамки обязательно согласуйте с типографией для конкретного тиража.</p>
               <div class="compare-grid">
                 <article class="border-demo bad"><strong>НЕПРАВИЛЬНО</strong><div><span>Узкая рамка у края</span></div></article>
                 <article class="border-demo good"><strong>ПРАВИЛЬНО</strong><div><span>Рамка глубоко внутри</span></div></article>
@@ -133,7 +116,7 @@
 
             <section class="guide-section" id="folding">
               <h2 class="section-title"><span>5.</span>ФАЛЬЦОВКА И БУКЛЕТЫ (ЛИНИИ СГИБА)</h2>
-              <p>Фальцовка — это процесс складывания листа. Каждый сгиб должен быть точно рассчитан в верстке. Самая частая ошибка — считать, что все панели складывающегося буклета должны быть одинаковой ширины. Панель, которая загибается внутрь, должна быть на 1.5–2 мм уже остальных, иначе буклет вздуется и согнется неровно.</p>
+              <p>Фальцовка — это процесс складывания листа. Каждый сгиб должен быть точно рассчитан в верстке. Самая частая ошибка — считать, что все панели складывающегося буклета должны быть одинаковой ширины. Внутреннюю панель евробуклета часто делают примерно на 1,5–2 мм уже, но точный размер зависит от бумаги, схемы фальцовки и оборудования типографии.</p>
               <div class="fold-tabs"><button class="active" type="button">Еврофальц</button><button type="button">Гармошка</button><button type="button">Оконный</button></div>
               <div class="fold-guide">
                 <div><span>100 мм</span><span>100 мм</span><span class="inner">98 мм</span></div>
@@ -180,9 +163,9 @@
 
             <section class="guide-section" id="creasing">
               <h2 class="section-title"><span>10.</span>БИГОВКА И ЛАМИНАЦИЯ</h2>
-              <p>Биговка — это нанесение линии продавливания на плотную бумагу (от 170 г/м²), чтобы сгиб получился ровным и краска не растрескалась. Ламинация защищает изделие от внешних воздействий и облагораживает его.</p>
+              <p>Биговка — это нанесение линии продавливания, помогающей получить аккуратный сгиб. Её необходимость зависит от плотности и направления волокон бумаги, покрытия, ламинации и требований производства. Ламинация защищает изделие от внешних воздействий и облагораживает его.</p>
               <div class="compare-grid">
-                <article class="process-card"><span class="crease-icon">⌄</span><div><strong>Биговка</strong><p>Обязательна для плотных и ламинированных материалов перед сгибом.</p></div></article>
+                <article class="process-card"><span class="crease-icon">⌄</span><div><strong>Биговка</strong><p>Может потребоваться перед сгибом; решение подтверждает производство.</p></div></article>
                 <article class="process-card"><span class="lamination-icon">◫</span><div><strong>Ламинация</strong><p>Глянцевая усиливает цвет, матовая уменьшает блики.</p></div></article>
               </div>
             </section>
@@ -205,51 +188,50 @@
                 <div class="code-line"><code>catalog_A4_64pages_inner_block_cmyk_v2.pdf</code><button data-copy="catalog_A4_64pages_inner_block_cmyk_v2.pdf" type="button">Копировать</button></div>
                 <div class="code-line"><code>business_cards_90x50_cmyk_uv-varnish_v3.zip</code><button data-copy="business_cards_90x50_cmyk_uv-varnish_v3.zip" type="button">Копировать</button></div>
               </div>
+              <div class="transfer-panel">
+                <strong>Обязательная передача финальных материалов</strong>
+                <p>После финальной проверки обязательно сохраните материалы во всех предусмотренных каналах: прикрепите их к задаче в Jira, передайте ответственному менеджеру и загрузите финальную версию в Nextcloud. Nextcloud используется как централизованное хранилище, поэтому загрузка файлов туда обязательна и не заменяется отправкой в мессенджере или только прикреплением к задаче.</p>
+                <ol><li>Прикрепите финальные файлы к соответствующей задаче в Jira.</li><li>Передайте файлы или ссылку ответственному менеджеру.</li><li>Загрузите финальные файлы в Nextcloud.</li></ol>
+                <a class="button secondary external-link" href="https://nccl.opservicegrid.com/index.php/apps/dashboard/" target="_blank" rel="noopener noreferrer">Открыть Nextcloud ↗</a>
+              </div>
             </section>
 
             <section class="guide-section" id="errors">
               <h2 class="section-title"><span>13.</span>ЧАСТЫЕ ОШИБКИ И КАК ИХ ИЗБЕЖАТЬ</h2>
               <div class="accordion">
                 <article class="accordion-item expanded"><button class="accordion-trigger" type="button" aria-expanded="true"><span><i></i>Пополосный макет буклета вместо развёртки</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Типография не сможет автоматически разобрать макет на сгибы.</p><p><strong>Решение:</strong> Верстать единым монтажным столом в развернутом формате.</p></div></article>
-                <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Одинаковая ширина всех панелей буклета</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Буклет вздуется и сложится неровно при фальцовке.</p><p><strong>Решение:</strong> Делать внутреннюю панель короче на 1.5–2 мм.</p></div></article>
+                <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Одинаковая ширина всех панелей буклета</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Буклет вздуется и сложится неровно при фальцовке.</p><p><strong>Решение:</strong> Запросить у типографии точные размеры панелей с учётом бумаги, фальцовки и оборудования.</p></div></article>
                 <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Неправильная ориентация лица относительно оборота</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Одна из сторон окажется перевернутой на готовом изделии.</p><p><strong>Решение:</strong> Проверить ориентацию и согласовать метод переворота с печатником.</p></div></article>
-                <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Важная информация в зоне сгиба</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Текст согнется и станет нечитаемым.</p><p><strong>Решение:</strong> Отодвигать важные элементы минимум на 4 мм от линии фальца.</p></div></article>
+                <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Важная информация в зоне сгиба</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Текст согнется и станет нечитаемым.</p><p><strong>Решение:</strong> Соблюдать безопасный отступ от линии фальца по требованиям типографии и конструкции изделия.</p></div></article>
                 <article class="accordion-item"><button class="accordion-trigger" type="button" aria-expanded="false"><span><i></i>Передача многостраничника разворотами</span><b>⌄</b></button><div class="accordion-content"><p><strong>Чем опасно:</strong> Брак при автоматической раскладке страниц на печатный лист.</p><p><strong>Решение:</strong> Экспортировать PDF строго постранично, по порядку, от 1 до N.</p></div></article>
               </div>
             </section>
 
             <section class="final-card" id="final-two">
               <div class="final-head"><h2>ФИНАЛЬНАЯ ПРОВЕРКА ГЛАВЫ 2</h2><strong data-counter="percent">Чек-лист пройден на 0%</strong></div>
-              <div class="check-list" data-checklist="chapter-two-final">
-                <button class="check-row" type="button"><span></span>Размер в сложенном и разложенном виде соответствует ТЗ.</button>
-                <button class="check-row" type="button"><span></span>Лицевая и оборотная стороны ориентированы правильно.</button>
-                <button class="check-row" type="button"><span></span>Вылеты продлены за обрезной формат.</button>
-                <button class="check-row" type="button"><span></span>Безопасная зона соблюдена для важного текста.</button>
-                <button class="check-row" type="button"><span></span>Шрифты переведены в кривые.</button>
-                <button class="check-row" type="button"><span></span>Все изображения в цветовой модели CMYK.</button>
-              </div>
+              <div class="check-list" data-checklist="chapter-2:final"></div>
               <div class="final-actions">
-                <button class="button secondary" data-reset type="button"><img src="assets/icons/rotate.svg" alt="" />Пройти заново</button>
+                <button class="button secondary" data-reset type="button"><img src="assets/icons/rotate.svg" alt="" />Сбросить чек-лист</button>
                 <button class="button secondary" data-download-checklist type="button"><img src="assets/icons/download.svg" alt="" />Скачать чек-лист</button>
-                <a class="button primary wide" href="#/home">Следующая глава: Широкоформатная →</a>
+                <a class="button primary wide" href="#/chapter-3">Следующая глава: Широкоформатная →</a>
               </div>
               <div class="progress-track visually-hidden"><span data-check-progress></span></div>
             </section>
 
             <footer class="chapter-footer">
               <a href="#/chapter-1"><small>ПРЕДЫДУЩАЯ ГЛАВА</small><span>Глава 1. База знаний ←</span></a>
-              <a href="#/home"><small>СЛЕДУЮЩАЯ ГЛАВА</small><span>Глава 3. Широкоформатная печать →</span></a>
+              <a href="#/chapter-3"><small>СЛЕДУЮЩАЯ ГЛАВА</small><span>Глава 3. Широкоформатная печать →</span></a>
             </footer>
           </article>
 
           <nav class="mobile-bottom-nav mobile-only">
-            <a href="#/chapter-1">← Глава 1</a><a href="#/chapter-2/quick-check-two">☷ Содержание</a><a href="#/home">Далее →</a>
+            <a href="#/chapter-1">← Глава 1</a><a href="#/chapter-2/quick-check-two">☷ Содержание</a><a href="#/chapter-3">Далее →</a>
           </nav>
 
           <aside class="chapter-toc">
             <strong>СОДЕРЖАНИЕ ГЛАВЫ</strong>
             <nav>
-              <a class="toc-link active" href="#/chapter-2/types">1. Типы изделий</a><a class="toc-link" href="#/chapter-2/before-work">2. Что уточнить</a>
+              <a class="toc-link" href="#/chapter-2/types">1. Типы изделий</a><a class="toc-link" href="#/chapter-2/before-work">2. Что уточнить</a>
               <a class="toc-link" href="#/chapter-2/formats">3. Основные форматы</a><a class="toc-link" href="#/chapter-2/flat-print">4. Плоская полиграфия</a>
               <a class="toc-link" href="#/chapter-2/folding">5. Фальцовка и буклеты</a><a class="toc-link" href="#/chapter-2/spread">6. Страница и разворот</a>
               <a class="toc-link" href="#/chapter-2/multipage">7. Многостраничники</a><a class="toc-link" href="#/chapter-2/binding">8. Виды скрепления</a>

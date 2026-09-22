@@ -5,7 +5,7 @@
             <button class="icon-button" data-theme-toggle type="button" aria-label="Переключить тему"><img src="assets/icons/moon.svg" alt="" width="16" height="16" /></button>
             <button class="icon-button" data-menu-toggle type="button" aria-label="Открыть меню"><img src="assets/icons/menu.svg" alt="" width="18" height="18" /></button>
           </div>
-          <div class="reading-progress"><span style="width: 76%"></span></div>
+          <div class="reading-progress"><span style="width: 0%"></span></div>
         </header>
         <nav class="mobile-menu" data-mobile-menu aria-label="Мобильное меню">
           <a href="#/home">Главная</a><a href="#/chapter-1">1. База знаний</a><a href="#/chapter-2">2. Полиграфия</a>
@@ -47,23 +47,9 @@
             </header>
 
             <section class="checklist-card" id="quick-check">
-              <div class="checklist-head"><h2><img src="assets/icons/check-square.svg" alt="" width="18" height="18" /> БЫСТРЫЙ ЧЕК-ЛИСТ</h2><strong data-counter>10 из 13 (76%)</strong></div>
+              <div class="checklist-head"><h2><img src="assets/icons/check-square.svg" alt="" width="18" height="18" /> БЫСТРЫЙ ЧЕК-ЛИСТ</h2><strong data-counter>0 из 13 (0%)</strong></div>
               <div class="progress-track"><span data-check-progress style="width: 76%"></span></div>
-              <div class="check-list" data-checklist="chapter-one-quick">
-                <button class="check-row" type="button"><span></span>Размер макета соответствует техническому заданию.</button>
-                <button class="check-row" type="button"><span></span>Выбран правильный масштаб.</button>
-                <button class="check-row" type="button"><span></span>Добавлены необходимые вылеты.</button>
-                <button class="check-row" type="button"><span></span>Важные элементы находятся в безопасной зоне.</button>
-                <button class="check-row" type="button"><span></span>Цветовая модель соответствует требованиям типографии.</button>
-                <button class="check-row" type="button"><span></span>Растровые изображения имеют достаточное разрешение.</button>
-                <button class="check-row" type="button"><span></span>Шрифты переведены в кривые.</button>
-                <button class="check-row" type="button"><span></span>Обводки при необходимости преобразованы в объекты.</button>
-                <button class="check-row" type="button"><span></span>Все изображения внедрены или приложены к исходнику.</button>
-                <button class="check-row" type="button"><span></span>В макете отсутствуют лишние и скрытые объекты.</button>
-                <button class="check-row" type="button"><span></span>Файл сохранён в требуемом формате.</button>
-                <button class="check-row" type="button"><span></span>Подготовлено превью готового изделия.</button>
-                <button class="check-row" type="button"><span></span>Текст, контакты, QR-коды и расположение сторон проверены.</button>
-              </div>
+              <div class="check-list" data-checklist="chapter-1:quick"></div>
             </section>
 
             <section class="guide-section" id="section-1">
@@ -100,7 +86,7 @@
                 <div class="bleed-diagram"><div class="trim-zone"><div class="safe-zone">БЕЗОПАСНАЯ ЗОНА</div></div></div>
                 <div class="legend"><span class="red">Вылет</span><span class="blue">Линия реза</span><span class="cyan">Безопасная зона</span></div>
               </div>
-              <p><b>Вылет</b> — продолжение фона за линию реза. Обычно 2–5 мм с каждой стороны. <b>Безопасная зона</b> — отступ важных элементов внутрь от линии реза.</p>
+              <p><b>Вылет</b> — продолжение фона за линию реза. Ориентир часто составляет 2–5 мм с каждой стороны, но точное значение задаёт типография. <b>Безопасная зона</b> определяется требованиями производства и конструкцией конкретного изделия.</p>
               <div class="compare-grid">
                 <article class="list-card good"><strong>НА ВЫЛЕТ НАДО ПРОДОЛЖАТЬ:</strong><ul><li>фон и плашки</li><li>фотографии у края</li><li>декоративные элементы</li></ul></article>
                 <article class="list-card bad"><strong>НА ВЫЛЕТ НЕЛЬЗЯ ВЫНОСИТЬ:</strong><ul><li>текст и логотипы</li><li>контакты и QR-коды</li><li>тонкие рамки</li></ul></article>
@@ -109,7 +95,7 @@
 
             <section class="guide-section" id="section-4">
               <h2 class="section-title"><span>4.</span>ЦВЕТОВАЯ МОДЕЛЬ</h2>
-              <p>Для большинства видов печати используется цветовая модель CMYK. Цвета в RGB предназначены для экранов и при печати могут стать значительно темнее или потерять сочность.</p>
+              <p>Для большинства видов печати используется CMYK, но точные цветовую модель и профиль всегда задаёт типография. Цвета в RGB предназначены для экранов и при печати могут стать значительно темнее или потерять сочность.</p>
               <div class="color-models">
                 <article><div class="rgb-rings"><i></i><i></i><i></i></div><strong>RGB (ЭКРАН)</strong><small>Световая модель</small></article>
                 <span>→</span>
@@ -124,19 +110,19 @@
               <div class="code-line prominent"><code>C0 M0 Y0 K100</code><button data-copy="C0 M0 Y0 K100" type="button"><img src="assets/icons/copy.svg" alt="" />Копировать</button></div>
               <div class="compare-grid">
                 <article class="list-card good"><strong>ЧИСТЫЙ ЧЁРНЫЙ</strong><code>C0 M0 Y0 K100</code><p>Мелкий текст, тонкие линии и штрихкоды.</p></article>
-                <article class="list-card bad"><strong>СОСТАВНОЙ ЧЁРНЫЙ</strong><code>C60 M40 Y40 K100</code><p>Только крупные фоновые плашки по согласованию.</p></article>
+                <article class="list-card bad"><strong>СОСТАВНОЙ ЧЁРНЫЙ</strong><code>C60 M40 Y40 K100</code><p>Только крупные фоновые плашки по согласованию. Рецепт и допустимое суммарное покрытие краской зависят от профиля и требований типографии.</p></article>
               </div>
             </section>
 
             <section class="guide-section" id="section-6">
               <h2 class="section-title"><span>6.</span>РАЗРЕШЕНИЕ ИЗОБРАЖЕНИЙ</h2>
-              <p>Для стандартной полиграфии растровые изображения обычно должны иметь разрешение 300 ppi в финальном размере. Для широкоформатной печати требования ниже — от 72 до 150 ppi.</p>
+              <p>Для стандартной полиграфии ориентиром часто служат 300 ppi в эффективном размере размещения. Для широкоформатной печати требуемое разрешение зависит от масштаба макета, материала, технологии и дистанции просмотра — универсального диапазона нет.</p>
               <div class="resolution-grid">
                 <article><div class="pixel-sample fine"></div><strong>300 PPI (ОТЛИЧНО)</strong><small>Детали чёткие</small></article>
                 <article><div class="pixel-sample medium"></div><strong>150 PPI (СРЕДНЕ)</strong><small>Допустимо не всегда</small></article>
                 <article><div class="pixel-sample coarse"></div><strong>72 PPI (ПИКСЕЛИ)</strong><small>Для полиграфии мало</small></article>
               </div>
-              <div class="callout info"><span class="callout-icon">i</span><strong>Разрешение проверяют в финальном размере размещения изображения, а не по исходному файлу.</strong></div>
+              <div class="callout info"><span class="callout-icon">i</span><strong>Разрешение проверяют в эффективном размере размещения изображения, а не по исходному файлу.</strong></div>
             </section>
 
             <section class="guide-section" id="section-7">
@@ -149,7 +135,7 @@
 
             <section class="guide-section" id="section-8">
               <h2 class="section-title"><span>8.</span>ШРИФТЫ И ТЕКСТ</h2>
-              <p>Перед передачей финального файла все шрифты должны быть переведены в кривые, если типография не запросила редактируемый исходник.</p>
+              <p>Текст переводят в кривые, если этого требует типография. При передаче печатного PDF также могут использоваться корректно встроенные шрифты — следуйте требованиям производства.</p>
               <div class="workflow">
                 <span><b>Aa</b><small>Живой текст</small></span><i>→</i>
                 <span><b>⌘</b><small>Проверка</small></span><i>→</i>
@@ -194,20 +180,19 @@
                 <article class="list-card good"><strong>РЕКОМЕНДУЕТСЯ:</strong><p>client_product_size_side_version.pdf</p></article>
                 <article class="list-card bad"><strong>ИЗБЕГАЙТЕ:</strong><p>final_final_точно-последний2.pdf</p></article>
               </div>
+              <div class="transfer-panel">
+                <strong>Обязательная передача финальных материалов</strong>
+                <p>После финальной проверки обязательно сохраните материалы во всех предусмотренных каналах: прикрепите их к задаче в Jira, передайте ответственному менеджеру и загрузите финальную версию в Nextcloud. Nextcloud используется как централизованное хранилище, поэтому загрузка файлов туда обязательна и не заменяется отправкой в мессенджере или только прикреплением к задаче.</p>
+                <ol><li>Прикрепите финальные файлы к соответствующей задаче в Jira.</li><li>Передайте файлы или ссылку ответственному менеджеру.</li><li>Загрузите финальные файлы в Nextcloud.</li></ol>
+                <a class="button secondary external-link" href="https://nccl.opservicegrid.com/index.php/apps/dashboard/" target="_blank" rel="noopener noreferrer">Открыть Nextcloud ↗</a>
+              </div>
             </section>
 
             <section class="final-card">
               <div class="final-head"><h2>ФИНАЛЬНАЯ ПРОВЕРКА</h2><strong data-counter="percent">Чек-лист пройден на 0%</strong></div>
-              <div class="check-list" data-checklist="chapter-one-final">
-                <button class="check-row" type="button"><span></span>Проверены размеры и масштаб.</button>
-                <button class="check-row" type="button"><span></span>Добавлены вылеты и соблюдена безопасная зона.</button>
-                <button class="check-row" type="button"><span></span>Цвета переведены в CMYK.</button>
-                <button class="check-row" type="button"><span></span>Шрифты переведены в кривые.</button>
-                <button class="check-row" type="button"><span></span>Все изображения и ссылки приложены.</button>
-                <button class="check-row" type="button"><span></span>Файл назван понятно и сохранён в нужном формате.</button>
-              </div>
+              <div class="check-list" data-checklist="chapter-1:final"></div>
               <div class="final-actions">
-                <button class="button secondary" data-reset type="button"><img src="assets/icons/rotate.svg" alt="" />Пройти заново</button>
+                <button class="button secondary" data-reset type="button"><img src="assets/icons/rotate.svg" alt="" />Сбросить чек-лист</button>
                 <button class="button secondary" data-download-checklist type="button"><img src="assets/icons/download.svg" alt="" />Скачать чек-лист</button>
                 <a class="button primary wide" href="#/chapter-2">Следующая глава: Полиграфия →</a>
               </div>
@@ -227,7 +212,7 @@
           <aside class="chapter-toc">
             <strong>СОДЕРЖАНИЕ ГЛАВЫ</strong>
             <nav>
-              <a class="toc-link active" href="#/chapter-1/section-1">1. Технические требования</a>
+              <a class="toc-link" href="#/chapter-1/section-1">1. Технические требования</a>
               <a class="toc-link" href="#/chapter-1/section-2">2. Размер и масштаб</a>
               <a class="toc-link" href="#/chapter-1/section-3">3. Вылеты и безопасная зона</a>
               <a class="toc-link" href="#/chapter-1/section-4">4. Цветовая модель</a>
