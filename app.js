@@ -10,6 +10,7 @@
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var scrollSpyObserver = null;
   var activeSectionByPage = {};
+  var themeAudio = null;
 
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
 
@@ -170,6 +171,19 @@
     root.dataset.theme = next;
     try { localStorage.setItem(themeKey, next); } catch (error) {}
     updateThemeControls();
+  }
+
+  function playThemeSound(theme) {
+    try {
+      if (themeAudio) {
+        themeAudio.pause();
+        themeAudio.currentTime = 0;
+      }
+      themeAudio = new Audio("assets/audio/" + (theme === "light" ? "light-on.mp3" : "light-off.mp3"));
+      themeAudio.volume = 0.25;
+      var playback = themeAudio.play();
+      if (playback && typeof playback.catch === "function") playback.catch(function () {});
+    } catch (error) {}
   }
 
   function updateThemeControls() {
@@ -350,7 +364,12 @@
 
   document.addEventListener("click", function (event) {
     var themeButton = event.target.closest("[data-theme-toggle]");
-    if (themeButton) { setTheme(root.dataset.theme === "dark" ? "light" : "dark"); return; }
+    if (themeButton) {
+      var nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+      setTheme(nextTheme);
+      playThemeSound(nextTheme);
+      return;
+    }
 
     var menuButton = event.target.closest("[data-menu-toggle]");
     if (menuButton) {

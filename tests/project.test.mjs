@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
+import { access } from "node:fs/promises";
 
 const index = await readFile(new URL("../index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../app.js", import.meta.url), "utf8");
@@ -160,4 +161,15 @@ test("номера глав не дублируются в генерируем�
 test("ключи localStorage чек-листов сохраняют совместимость", () => {
   assert.match(app, /"printGuide:v1:" \+ parts\[0\] \+ ":checklist:" \+ parts\[1\]/);
   assert.match(app, /localStorage\.setItem\(storageKey\(listKey\)/);
+});
+
+test("звуки темы запускаются только из ручного обработчика", async () => {
+  await access(new URL("../assets/audio/light-on.mp3", import.meta.url));
+  await access(new URL("../assets/audio/light-off.mp3", import.meta.url));
+  assert.match(app, /theme === "light" \? "light-on\.mp3" : "light-off\.mp3"/);
+  assert.match(app, /themeAudio\.volume = 0\.25/);
+  assert.match(app, /themeAudio\.pause\(\)[\s\S]*?themeAudio\.currentTime = 0/);
+  assert.match(app, /setTheme\(nextTheme\);\s*playThemeSound\(nextTheme\)/);
+  assert.equal((app.match(/playThemeSound\(nextTheme\)/g) || []).length, 1);
+  assert.match(app, /playback\.catch\(function \(\) \{\}\)/);
 });
