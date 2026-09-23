@@ -15,22 +15,52 @@ const chapters = [
   { id: "chapter-8", published: false },
   { id: "chapter-9", published: false }
 ];
-const definitions = { "chapter-1:final": ["a", "b"], "chapter-2:final": ["a", "b"] };
+const definitions = {
+  "chapter-1:quick": ["a", "b"], "chapter-1:final": ["c", "d"],
+  "chapter-2:quick": ["a"], "chapter-2:final": ["b"]
+};
 
 test("первый запуск начинается с нулевого прогресса", () => {
   assert.deepEqual(logic.normalizeChecklist(null, 3), [false, false, false]);
-  assert.deepEqual(logic.overallProgress(chapters, {}, definitions), { completed: 0, total: 9, percent: 0 });
+  assert.deepEqual(logic.chapterProgress("chapter-1", {}, definitions), { completed: 0, total: 4, percentage: 0 });
+  assert.equal(logic.chapterStatus(chapters[0], {}, definitions), "not-started");
 });
 
 test("один пункт обновляет счётчик, но не завершает главу", () => {
   assert.deepEqual(logic.checklistStats([true, false]), { checked: 1, total: 2, percent: 50, complete: false });
 });
 
-test("полный финальный чек-лист завершает только опубликованную главу", () => {
-  var state = { "chapter-1:final": [true, true], "chapter-2:final": [false, false] };
-  assert.deepEqual(logic.overallProgress(chapters, state, definitions), { completed: 1, total: 9, percent: 11 });
+test("частичный прогресс даёт статус В процессе", () => {
+  var state = { "chapter-1:quick": [true, false], "chapter-1:final": [false, false] };
+  assert.deepEqual(logic.chapterProgress("chapter-1", state, definitions), { completed: 1, total: 4, percentage: 25 });
+  assert.equal(logic.chapterStatus(chapters[0], state, definitions), "in-progress");
+});
+
+test("одного полного чек-листа недостаточно для завершения главы", () => {
+  var state = { "chapter-1:quick": [true, true], "chapter-1:final": [false, false] };
+  assert.equal(logic.chapterStatus(chapters[0], state, definitions), "in-progress");
+});
+
+test("все чек-листы дают статус Пройдено", () => {
+  var state = { "chapter-1:quick": [true, true], "chapter-1:final": [true, true] };
+  assert.equal(logic.chapterStatus(chapters[0], state, definitions), "completed");
   state["chapter-1:final"][0] = false;
-  assert.equal(logic.overallProgress(chapters, state, definitions).completed, 0);
+  assert.equal(logic.chapterStatus(chapters[0], state, definitions), "in-progress");
+});
+
+test("главы в разработке всегда сохраняют свой статус", () => {
+  assert.equal(logic.chapterStatus(chapters[2], { "chapter-3:final": [true] }, { "chapter-3:final": ["a"] }), "development");
+});
+
+test("общий прогресс считается по пунктам только опубликованных глав", () => {
+  var state = {
+    "chapter-1:quick": [true, true], "chapter-1:final": [true, true],
+    "chapter-2:quick": [true], "chapter-2:final": [false],
+    "chapter-3:final": [true]
+  };
+  assert.deepEqual(logic.overallProgress(chapters, state, definitions), {
+    completed: 1, total: 2, completedItems: 5, totalItems: 6, exactPercent: 83.33333333333334, percent: 83
+  });
 });
 
 test("повреждённые и устаревшие данные безопасно нормализуются", () => {

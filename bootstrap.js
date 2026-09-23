@@ -1,5 +1,5 @@
 (function () {
-  var chapters = ["chapter-1", "chapter-2", "chapter-3", "chapter-4"];
+  var chapters = ["chapter-1", "chapter-2", "chapter-3", "chapter-4", "chapter-8", "chapter-9"];
 
   Promise.all(
     chapters.map(function (chapter) {

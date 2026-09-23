@@ -42,28 +42,41 @@
 
   function chapterById(id) { return data.chapters.find(function (chapter) { return chapter.id === id; }); }
 
+  function chapterState(chapter) {
+    var progress = logic.chapterProgress(chapter.id, checklistState, data.checklists);
+    var status = logic.chapterStatus(chapter, checklistState, data.checklists);
+    var labels = { "not-started": "Не начато", "in-progress": "В процессе", completed: "Пройдено", development: "В разработке" };
+    return { status: status, label: labels[status], progress: progress };
+  }
+
   function getRoute() {
     var parts = window.location.hash.replace(/^#\/?/, "").split("/").filter(Boolean);
     return { page: parts[0] || "home", anchor: parts[1] || "" };
   }
 
   function isChapterComplete(chapterId) {
-    var key = chapterId + ":final";
-    return Boolean(data.checklists[key] && logic.checklistStats(checklistState[key] || []).complete);
+    var chapter = chapterById(chapterId);
+    return Boolean(chapter && logic.chapterStatus(chapter, checklistState, data.checklists) === "completed");
   }
 
   function navMarkup(currentId) {
     return data.chapters.map(function (chapter) {
-      var completed = chapter.published && isChapterComplete(chapter.id);
+      var state = chapterState(chapter);
+      var completed = state.status === "completed";
       var marker = completed ? "✓" : chapter.number;
-      var classes = [chapter.id === currentId ? "active" : "", chapter.published ? "" : "in-development", completed ? "completed" : ""].filter(Boolean).join(" ");
-      return '<a class="' + classes + '" href="#/' + chapter.id + '"' + (chapter.id === currentId ? ' aria-current="page"' : "") + '><i class="' + (completed ? "done" : "") + '">' + marker + "</i><span>" + Number(chapter.number) + ". " + escapeHtml(chapter.shortTitle) + "</span></a>";
+      var classes = [chapter.id === currentId ? "active" : "", state.status, completed ? "completed" : ""].filter(Boolean).join(" ");
+      var compactStatus = state.status === "in-progress" ? state.progress.percentage + "%" : state.label;
+      var content = '<i class="' + (completed ? "done" : "") + '">' + marker + '</i><span>' + escapeHtml(chapter.shortTitle) + '</span><small class="nav-status">' + escapeHtml(compactStatus) + "</small>";
+      return chapter.isAccessible === false ? '<span class="' + classes + '">' + content + "</span>" : '<a class="' + classes + '" href="#/' + chapter.id + '"' + (chapter.id === currentId ? ' aria-current="page"' : "") + ">" + content + "</a>";
     }).join("");
   }
 
   function mobileMenuMarkup() {
     return '<a href="#/home">Главная</a>' + data.chapters.map(function (chapter) {
-      return '<a href="#/' + chapter.id + '">' + Number(chapter.number) + ". " + escapeHtml(chapter.title) + "</a>";
+      var state = chapterState(chapter);
+      var compactStatus = state.status === "in-progress" ? state.progress.percentage + "%" : state.label;
+      var content = '<span><i class="mobile-chapter-number">' + chapter.number + "</i>" + escapeHtml(chapter.title) + '</span><small class="nav-status">' + escapeHtml(compactStatus) + "</small>";
+      return chapter.isAccessible === false ? '<span class="development">' + content + "</span>" : '<a class="' + state.status + '" href="#/' + chapter.id + '">' + content + "</a>";
     }).join("") + '<button data-theme-toggle type="button" aria-label="Переключить цветовую тему" aria-pressed="false"><span data-theme-label></span></button>';
   }
 
@@ -85,7 +98,7 @@
     var previousLabel = previous ? "Глава " + Number(previous.number) + ". " + previous.title : "Главная";
     var nextLabel = next ? "Глава " + Number(next.number) + ". " + next.title : "Главная";
     var topicsId = "planned-topics-" + chapter.id;
-    return '<section class="page" data-page="' + chapter.id + '" hidden><header class="chapter-mobile-header mobile-only"><a class="brand" href="#/home"><img src="assets/icons/brand.svg" alt="" width="24" height="24"><strong>' + chapter.number + ". " + escapeHtml(chapter.title.toUpperCase()) + '</strong></a><div class="header-controls"><button class="icon-button" data-theme-toggle type="button" aria-label="Переключить цветовую тему" aria-pressed="false"><img src="assets/icons/moon.svg" alt="" width="16" height="16"></button><button class="icon-button" data-menu-toggle type="button" aria-label="Открыть меню" aria-expanded="false"><img src="assets/icons/menu.svg" alt="" width="18" height="18"></button></div></header><nav class="mobile-menu" data-mobile-menu aria-label="Мобильное меню"></nav><div class="guide-shell placeholder-shell"><aside class="guide-sidebar"><div><a class="sidebar-brand" href="#/home"><span><img src="assets/icons/brand.svg" alt="" width="24" height="24"><strong>PRINT GUIDE</strong></span><small>Подготовка макетов к печати</small></a><label class="sidebar-search"><img src="assets/icons/search.svg" alt="" width="14" height="14"><input data-guide-search type="search" placeholder="Поиск по главам…" aria-label="Поиск по главам"></label><nav class="chapter-nav" aria-label="Главы"></nav></div><div class="sidebar-bottom"><button data-theme-toggle type="button" aria-label="Переключить цветовую тему" aria-pressed="false"><img src="assets/icons/moon.svg" alt="" width="16" height="16"><span data-theme-label></span><span class="theme-switch"><span></span></span></button><a href="#/home">← На главную</a></div></aside><article class="guide-content narrow"><header class="chapter-intro"><div class="chapter-title"><span>' + chapter.number + "</span><h1>" + escapeHtml(chapter.title) + '</h1></div><span class="development-badge">Раздел в разработке</span><p class="lead">' + escapeHtml(chapter.description) + '</p><div class="callout info"><span class="callout-icon">i</span><strong>Материалы для этого раздела ещё готовятся.</strong></div></header><section class="guide-section" id="' + topicsId + '"><h2 class="section-title"><span>•</span>ПЛАНИРУЕМЫЕ ТЕМЫ</h2><ul class="bullet-list">' + chapter.topics.map(function (topic) { return "<li>" + escapeHtml(topic) + "</li>"; }).join("") + "</ul></section>" + placeholderExtra(chapter) + placeholderChecklist(chapter) + '<a class="button secondary" href="#/home">Вернуться на главную</a><footer class="chapter-footer"><a href="' + previousHref + '"><small>ПРЕДЫДУЩАЯ ГЛАВА</small><span>' + escapeHtml(previousLabel) + ' ←</span></a><a href="' + nextHref + '"><small>СЛЕДУЮЩАЯ ГЛАВА</small><span>' + escapeHtml(nextLabel) + ' →</span></a></footer></article><nav class="mobile-bottom-nav mobile-only"><a href="' + previousHref + '">← Назад</a><a href="#/home">Главная</a><a href="' + nextHref + '">Далее →</a></nav><aside class="chapter-toc"><strong>СОДЕРЖАНИЕ ГЛАВЫ</strong><nav><a class="toc-link" href="#/' + chapter.id + "/" + topicsId + '">Планируемые темы</a></nav></aside></div></section>';
+    return '<section class="page" data-page="' + chapter.id + '" hidden><header class="chapter-mobile-header mobile-only"><a class="brand" href="#/home"><img src="assets/icons/brand.svg" alt="" width="24" height="24"><strong>' + chapter.number + " · " + escapeHtml(chapter.title.toUpperCase()) + '</strong></a><div class="header-controls"><button class="icon-button" data-theme-toggle type="button" aria-label="Переключить цветовую тему" aria-pressed="false"><img src="assets/icons/moon.svg" alt="" width="16" height="16"></button><button class="icon-button" data-menu-toggle type="button" aria-label="Открыть меню" aria-expanded="false"><img src="assets/icons/menu.svg" alt="" width="18" height="18"></button></div></header><nav class="mobile-menu" data-mobile-menu aria-label="Мобильное меню"></nav><div class="guide-shell placeholder-shell"><aside class="guide-sidebar"><div><a class="sidebar-brand" href="#/home"><span><img src="assets/icons/brand.svg" alt="" width="24" height="24"><strong>PRINT GUIDE</strong></span><small>Подготовка макетов к печати</small></a><label class="sidebar-search"><img src="assets/icons/search.svg" alt="" width="14" height="14"><input data-guide-search type="search" placeholder="Поиск по главам…" aria-label="Поиск по главам"></label><nav class="chapter-nav" aria-label="Главы"></nav></div><div class="sidebar-bottom"><button data-theme-toggle type="button" aria-label="Переключить цветовую тему" aria-pressed="false"><img src="assets/icons/moon.svg" alt="" width="16" height="16"><span data-theme-label></span><span class="theme-switch"><span></span></span></button><a href="#/home">← На главную</a></div></aside><article class="guide-content narrow"><header class="chapter-intro"><div class="chapter-title"><span>' + chapter.number + "</span><h1>" + escapeHtml(chapter.title) + '</h1></div><span class="development-badge">Глава в разработке</span><p>Материалы этой главы ещё дополняются. Уже опубликованную информацию можно просматривать, но содержание и структура могут измениться.</p><p class="lead">' + escapeHtml(chapter.description) + '</p></header><section class="guide-section" id="' + topicsId + '"><h2 class="section-title"><span>•</span>ПЛАНИРУЕМЫЕ ТЕМЫ</h2><ul class="bullet-list">' + chapter.topics.map(function (topic) { return "<li>" + escapeHtml(topic) + "</li>"; }).join("") + "</ul></section>" + placeholderExtra(chapter) + placeholderChecklist(chapter) + '<a class="button secondary" href="#/home">Вернуться на главную</a><footer class="chapter-footer"><a href="' + previousHref + '"><small>ПРЕДЫДУЩАЯ ГЛАВА</small><span>' + escapeHtml(previousLabel) + ' ←</span></a><a href="' + nextHref + '"><small>СЛЕДУЮЩАЯ ГЛАВА</small><span>' + escapeHtml(nextLabel) + ' →</span></a></footer></article><nav class="mobile-bottom-nav mobile-only"><a href="' + previousHref + '">← Назад</a><a href="#/home">Главная</a><a href="' + nextHref + '">Далее →</a></nav><aside class="chapter-toc"><strong>СОДЕРЖАНИЕ ГЛАВЫ</strong><nav><a class="toc-link" href="#/' + chapter.id + "/" + topicsId + '">Планируемые темы</a></nav></aside></div></section>';
   }
 
   function renderPlaceholderPages() {
@@ -103,7 +116,10 @@
     document.querySelectorAll("[data-checklist]").forEach(function (list) {
       var key = list.dataset.checklist;
       var items = data.checklists[key] || [];
-      list.innerHTML = items.map(function (item, index) {
+      var start = Number(list.dataset.checkStart || 0);
+      var end = list.dataset.checkEnd ? Number(list.dataset.checkEnd) : items.length;
+      list.innerHTML = items.slice(start, end).map(function (item, localIndex) {
+        var index = start + localIndex;
         var checked = checklistState[key][index];
         return '<button class="check-row' + (checked ? " checked" : "") + '" type="button" role="checkbox" aria-checked="' + checked + '" data-check-index="' + index + '"><span aria-hidden="true"></span>' + escapeHtml(item) + "</button>";
       }).join("");
@@ -129,19 +145,25 @@
     var progress = logic.overallProgress(data.chapters, checklistState, data.checklists);
     var label = document.querySelector("[data-overall-label]");
     var bar = document.querySelector("[data-overall-progress]");
-    if (label) label.innerHTML = progress.completed + " из " + progress.total + ' глав <span class="desktop-only">завершено </span>(' + progress.percent + "%)";
-    if (bar) bar.style.width = progress.percent + "%";
+    if (label) label.textContent = progress.completedItems + " из " + progress.totalItems + " пунктов выполнено (" + progress.percent + "%)";
+    if (bar) bar.style.width = progress.exactPercent + "%";
     data.chapters.forEach(function (chapter) {
       var card = document.querySelector('[data-chapter-card="' + chapter.id + '"]');
       if (!card) return;
       var status = card.querySelector(".status");
-      var completed = chapter.published && isChapterComplete(chapter.id);
+      var state = chapterState(chapter);
+      var completed = state.status === "completed";
       card.classList.toggle("completed", completed);
       card.classList.toggle("current", getRoute().page === chapter.id);
-      status.classList.toggle("learned", completed);
-      status.textContent = chapter.published ? (completed ? "Изучено" : "Не начато") : "В разработке";
+      card.classList.toggle("in-progress", state.status === "in-progress");
+      card.classList.toggle("in-development", state.status === "development");
+      card.removeAttribute("aria-disabled");
+      card.removeAttribute("tabindex");
+      status.className = "status " + state.status;
+      status.textContent = state.label + (state.status === "in-progress" ? " · " + state.progress.percentage + "%" : "");
     });
     document.querySelectorAll(".chapter-nav").forEach(function (nav) { nav.innerHTML = navMarkup(getRoute().page); });
+    document.querySelectorAll("[data-mobile-menu]").forEach(function (menu) { menu.innerHTML = mobileMenuMarkup(); });
   }
 
   function setTheme(next) {
@@ -269,7 +291,8 @@
   function buildSearchIndex() {
     var results = [];
     data.chapters.forEach(function (chapter) {
-      results.push({ title: "Глава " + Number(chapter.number) + ". " + chapter.title, text: chapter.description + " " + chapter.topics.join(" "), href: "#/" + chapter.id, status: chapter.published ? "Опубликовано" : "В разработке" });
+      var state = chapterState(chapter);
+      results.push({ title: chapter.title, text: chapter.description + " " + chapter.topics.join(" "), href: "#/" + chapter.id, status: state.label + (state.status === "in-progress" ? " · " + state.progress.percentage + "%" : "") });
     });
     document.querySelectorAll('[data-page^="chapter-"] .guide-section').forEach(function (section) {
       var page = section.closest(".page");
