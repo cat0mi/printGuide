@@ -17,6 +17,8 @@ const chapterEight = await readFile(new URL("../chapters/chapter-8/index.html", 
 const chapterNine = await readFile(new URL("../chapters/chapter-9/index.html", import.meta.url), "utf8");
 const data = await readFile(new URL("../data.js", import.meta.url), "utf8");
 const bootstrap = await readFile(new URL("../bootstrap.js", import.meta.url), "utf8");
+const pdfChecklist = await readFile(new URL("../pdf-checklist.js", import.meta.url), "utf8");
+const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 
 test("главы 3–9 имеют маршруты на главной", () => {
   for (let number = 3; number <= 9; number += 1) assert.match(index, new RegExp('href="#/chapter-' + number + '"'));
@@ -50,6 +52,15 @@ test("содержание главы использует IntersectionObserver 
 test("у глав 1 и 2 нет статически активного первого пункта", () => {
   assert.doesNotMatch(chapterOne, /toc-link active/);
   assert.doesNotMatch(chapterTwo, /toc-link active/);
+});
+
+test("разделы главы 1 пронумерованы последовательно и ссылки содержания совпадают", () => {
+  const headingNumbers = [...chapterOne.matchAll(/<h2 class="section-title"><span>(\d+)\.<\/span>/g)].map((match) => Number(match[1]));
+  const sectionIds = [...chapterOne.matchAll(/<section class="guide-section" id="section-(\d+)">/g)].map((match) => Number(match[1]));
+  const tocNumbers = [...chapterOne.matchAll(/href="#\/chapter-1\/section-(\d+)">(\d+)\./g)].map((match) => [Number(match[1]), Number(match[2])]);
+  assert.deepEqual(headingNumbers, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+  assert.deepEqual(sectionIds, headingNumbers);
+  assert.deepEqual(tocNumbers, headingNumbers.map((number) => [number, number]));
 });
 
 test("глава 3 загружается как опубликованная полноценная глава", () => {
@@ -190,10 +201,18 @@ test("все девять глав опубликованы и доступны"
   assert.doesNotMatch(app, /unavailableCard/);
 });
 
-test("на главной сохранён подробный формат общего прогресса", () => {
-  assert.match(index, /<strong>Общий прогресс изучения<\/strong><span data-overall-label>0 из 270 пунктов выполнено \(0%\)<\/span>/);
-  assert.match(app, /progress\.completedItems \+ " из " \+ progress\.totalItems \+ " пунктов выполнено \(" \+ progress\.percent \+ "%\)"/);
+test("на главной общий прогресс отображается только процентом", () => {
+  assert.match(index, /<strong>Общий прогресс<\/strong><span data-overall-label>0%<\/span>/);
+  assert.match(app, /label\.textContent = progress\.percent \+ "%"/);
+  assert.doesNotMatch(index, /пунктов выполнено|Общий прогресс изучения/);
+  assert.doesNotMatch(app, /пунктов выполнено/);
   assert.match(app, /bar\.style\.width = progress\.exactPercent \+ "%"/);
+});
+
+test("футер главной остаётся видимым в мобильной версии", () => {
+  assert.match(index, /<footer class="home-footer">[\s\S]*?Внутренний гайд для дизайнеров[\s\S]*?Последнее обновление: 1 октября 2026/);
+  assert.doesNotMatch(styles, /\.recommended-section,\s*\.home-footer\s*\{\s*display:\s*none/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.home-footer\s*\{[\s\S]*?display:\s*flex[\s\S]*?flex-direction:\s*column/);
 });
 
 test("боковое и мобильное меню показывают только процент для В процессе", () => {
@@ -236,4 +255,30 @@ test("переключатель темы в хедере содержит ди�
   [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight, chapterNine].forEach((chapter) => {
     assert.match(chapter, /chapter-mobile-header[\s\S]*?class="theme-control"[\s\S]*?data-theme-label/);
   });
+});
+
+test("чек-листы скачиваются как текстовый PDF с локальными кириллическими шрифтами", async () => {
+  assert.equal(typeof packageJson.dependencies.jspdf, "string");
+  await access(new URL("../assets/vendor/jspdf.umd.min.js", import.meta.url));
+  await access(new URL("../assets/fonts/geist-400.ttf", import.meta.url));
+  await access(new URL("../assets/fonts/geist-700.ttf", import.meta.url));
+  assert.match(index, /assets\/vendor\/jspdf\.umd\.min\.js[\s\S]*?pdf-checklist\.js/);
+  assert.match(pdfChecklist, /addFileToVFS\("Geist-Regular\.ttf"/);
+  assert.match(pdfChecklist, /splitTextToSize\(item, textWidth\)/);
+  assert.match(pdfChecklist, /if \(y \+ itemHeight > bottomLimit\)[\s\S]*?doc\.addPage\(\)/);
+  assert.match(pdfChecklist, /doc\.rect\(margin, y - 3\.2, checkboxSize, checkboxSize\)/);
+  assert.match(app, /print-guide-final-checklist\.pdf/);
+  assert.match(app, /print-guide-chapter-" \+ chapter\.number \+ "-" \+ checklistType \+ "-checklist\.pdf/);
+  assert.match(app, /button\.closest\("\.checklist-card, \.final-card"\)/);
+  assert.doesNotMatch(app, /print-guide-checklist\.txt|text\/plain|new Blob/);
+});
+
+test("PDF-экспорт доступен у быстрых и финальных чек-листов всех глав", () => {
+  [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight].forEach((chapter) => {
+    assert.equal((chapter.match(/data-download-checklist/g) || []).length, 2);
+    assert.match(chapter, /data-checklist="chapter-\d+:quick"[\s\S]*?data-download-checklist/);
+    assert.match(chapter, /data-checklist="chapter-\d+:final"[\s\S]*?data-download-checklist/);
+  });
+  assert.equal((chapterNine.match(/data-download-checklist/g) || []).length, 1);
+  assert.match(chapterNine, /data-checklist="chapter-9:final"[\s\S]*?data-download-checklist/);
 });

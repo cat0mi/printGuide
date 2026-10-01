@@ -146,7 +146,7 @@
     var progress = logic.overallProgress(data.chapters, checklistState, data.checklists);
     var label = document.querySelector("[data-overall-label]");
     var bar = document.querySelector("[data-overall-progress]");
-    if (label) label.textContent = progress.completedItems + " из " + progress.totalItems + " пунктов выполнено (" + progress.percent + "%)";
+    if (label) label.textContent = progress.percent + "%";
     if (bar) bar.style.width = progress.exactPercent + "%";
     data.chapters.forEach(function (chapter) {
       var card = document.querySelector('[data-chapter-card="' + chapter.id + '"]');
@@ -184,6 +184,25 @@
       var playback = themeAudio.play();
       if (playback && typeof playback.catch === "function") playback.catch(function () {});
     } catch (error) {}
+  }
+
+  function downloadChecklistPdf(button) {
+    var checklistCard = button.closest(".checklist-card, .final-card");
+    var page = button.closest('.page[data-page^="chapter-"]');
+    var checklist = checklistCard && checklistCard.querySelector("[data-checklist]");
+    var checklistKey = checklist && checklist.dataset.checklist;
+    var checklistType = checklistKey && checklistKey.split(":")[1];
+    var chapterId = checklistKey && checklistKey.split(":")[0];
+    var chapter = data.chapters.find(function (item) { return page && item.id === page.dataset.page && item.id === chapterId; });
+    var items = Array.from(checklistCard.querySelectorAll(".check-row")).map(function (item) { return item.textContent.trim(); });
+    var isGeneralFinal = chapter && chapter.id === "chapter-9" && checklistType === "final";
+    var typeLabel = checklistType === "quick" ? "быстрый чек-лист" : "финальная проверка";
+    var title = isGeneralFinal ? "Финальный чек-лист" : "Глава " + chapter.number + " — " + chapter.title + " — " + typeLabel;
+    var filename = isGeneralFinal ? "print-guide-final-checklist.pdf" : "print-guide-chapter-" + chapter.number + "-" + checklistType + "-checklist.pdf";
+    var date = new Intl.DateTimeFormat("ru-RU", { day: "2-digit", month: "2-digit", year: "numeric" }).format(new Date());
+
+    if (!window.PRINT_GUIDE_PDF || !checklistCard || !chapter || !items.length) return Promise.reject(new Error("Не удалось определить чек-лист"));
+    return window.PRINT_GUIDE_PDF.download({ title: title, items: items, date: date, filename: filename });
   }
 
   function updateThemeControls() {
@@ -477,10 +496,10 @@
 
     var download = event.target.closest("[data-download-checklist]");
     if (download) {
-      var finalCard = download.closest(".final-card");
-      var lines = Array.from(finalCard.querySelectorAll(".check-row")).map(function (item) { return (item.getAttribute("aria-checked") === "true" ? "[x] " : "[ ] ") + item.textContent.trim(); });
-      var url = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" }));
-      var link = document.createElement("a"); link.href = url; link.download = "print-guide-checklist.txt"; link.click(); URL.revokeObjectURL(url);
+      download.disabled = true;
+      downloadChecklistPdf(download).catch(function () {
+        showToast("Не удалось сформировать PDF. Попробуйте ещё раз.");
+      }).finally(function () { download.disabled = false; });
     }
   });
 

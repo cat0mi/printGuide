@@ -5,8 +5,11 @@
   "scripts": {
     "start": "node server.mjs",
     "serve": "node server.mjs",
-    "lint": "node --check app.js && node --check bootstrap.js && node --check data.js && node --check logic.js && node --check theme-init.js",
+    "lint": "node --check app.js && node --check bootstrap.js && node --check data.js && node --check logic.js && node --check theme-init.js && node --check pdf-checklist.js",
     "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "jspdf": "^3.0.4"
   }
 }

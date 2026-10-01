@@ -459,6 +459,14 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .scale-bar { height: 28px; border: 2px solid var(--cyan); border-radius: 4px; display: block; }.scale-bar.tenth { width: 34%; }
 .resolution-table { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
 .resolution-table p { margin: 0; border-bottom: 1px solid var(--line); padding: 13px 16px; display: grid; grid-template-columns: 120px 1fr; gap: 18px; color: var(--muted); }.resolution-table p:last-child { border: 0; }.resolution-table b { color: var(--cyan); }
+.technology-table-wrap { margin-top: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); overflow-x: auto; }
+.technology-table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: 13px; line-height: 1.45; }
+.technology-table th, .technology-table td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+.technology-table th { color: var(--text); background: var(--surface-soft); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.technology-table td { color: var(--muted); }
+.technology-table td:first-child { color: var(--text); font-weight: 650; white-space: nowrap; }
+.technology-table tbody tr:last-child td { border-bottom: 0; }
+.technology-note { margin: 14px 0 0; padding: 14px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: var(--surface-soft); color: var(--muted); font-size: 13px; line-height: 1.55; }
 .formula-card { border: 1px solid var(--blue); border-radius: 12px; background: color-mix(in srgb, var(--blue) 7%, var(--surface)); padding: 20px; display: flex; flex-direction: column; gap: 10px; }.formula-card small { color: var(--cyan); font-weight: 700; }.formula-card code { color: var(--text); font-size: 18px; }
 .hierarchy-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px; display: grid; gap: 10px; }.hierarchy-demo span { display: flex; align-items: center; gap: 12px; color: var(--muted); }.hierarchy-demo b { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; color: white; }.hierarchy-demo span:nth-child(2) b { background: var(--cyan); color: #06111a; }.hierarchy-demo span:nth-child(3) b { background: var(--green); }
 .type-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 30px; display: flex; flex-direction: column; gap: 12px; }.type-demo strong { font: 800 34px/1 "Outfit"; }.type-demo span { font-size: 20px; font-weight: 600; }.type-demo small { color: var(--muted); }
@@ -596,7 +604,17 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .status { padding: 3px 8px; font-size: 10px; }
   .chapter-card h3 { font-size: 15px; }
   .chapter-card p { margin-top: 4px; font-size: 12px; line-height: 16px; }
-  .recommended-section, .home-footer { display: none; }
+  .recommended-section { display: none; }
+  .home-footer {
+    margin-top: 40px;
+    padding: 24px 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 11px;
+    line-height: 1.45;
+  }
 
   .chapter-mobile-header {
     position: fixed;
@@ -767,6 +785,10 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .wide-format-hero span { font-size: 7px; }
   .scale-comparison { grid-template-columns: 1fr; gap: 8px; }.scale-comparison article { min-height: 95px; padding: 12px; }.scale-comparison strong { font-size: 14px; }
   .resolution-table p { grid-template-columns: 82px 1fr; padding: 9px 10px; gap: 8px; font-size: 10px; }
+  .technology-table-wrap { margin-top: 16px; border-radius: 10px; }
+  .technology-table { min-width: 620px; font-size: 11px; }
+  .technology-table th, .technology-table td { padding: 10px; }
+  .technology-note { padding: 12px 13px; font-size: 11px; }
   .formula-card { padding: 12px; font-size: 10px; }.formula-card code { font-size: 12px; }
   .hierarchy-demo { padding: 12px; font-size: 10px; }.hierarchy-demo b { width: 23px; height: 23px; }
   .type-demo { padding: 18px; }.type-demo strong { font-size: 21px; }.type-demo span { font-size: 14px; }
