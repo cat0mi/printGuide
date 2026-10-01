@@ -5,10 +5,14 @@ import { access } from "node:fs/promises";
 
 const index = await readFile(new URL("../index.html", import.meta.url), "utf8");
 const app = await readFile(new URL("../app.js", import.meta.url), "utf8");
+const styles = await readFile(new URL("../styles.css", import.meta.url), "utf8");
 const chapterOne = await readFile(new URL("../chapters/chapter-1/index.html", import.meta.url), "utf8");
 const chapterTwo = await readFile(new URL("../chapters/chapter-2/index.html", import.meta.url), "utf8");
 const chapterThree = await readFile(new URL("../chapters/chapter-3/index.html", import.meta.url), "utf8");
 const chapterFour = await readFile(new URL("../chapters/chapter-4/index.html", import.meta.url), "utf8");
+const chapterFive = await readFile(new URL("../chapters/chapter-5/index.html", import.meta.url), "utf8");
+const chapterSix = await readFile(new URL("../chapters/chapter-6/index.html", import.meta.url), "utf8");
+const chapterSeven = await readFile(new URL("../chapters/chapter-7/index.html", import.meta.url), "utf8");
 const chapterEight = await readFile(new URL("../chapters/chapter-8/index.html", import.meta.url), "utf8");
 const chapterNine = await readFile(new URL("../chapters/chapter-9/index.html", import.meta.url), "utf8");
 const data = await readFile(new URL("../data.js", import.meta.url), "utf8");
@@ -83,6 +87,51 @@ test("глава 4 содержит 13 разделов, ошибки и фин�
   assert.doesNotMatch(chapterFour, /toc-link active/);
 });
 
+test("глава 5 опубликована и содержит оба чек-листа", () => {
+  assert.match(bootstrap, /"chapter-5"/);
+  assert.match(data, /id: "chapter-5"[\s\S]*?published: true/);
+  assert.match(chapterFive, /data-page="chapter-5"/);
+  assert.match(chapterFive, /data-checklist="chapter-5:quick"/);
+  assert.match(chapterFive, /data-checklist="chapter-5:final"/);
+  const quick = data.match(/"chapter-5:quick": \[([\s\S]*?)\n      \],/)[1];
+  const final = data.match(/"chapter-5:final": \[([\s\S]*?)\n      \],/)[1];
+  assert.equal((quick.match(/"[^"]+"/g) || []).length, 11);
+  assert.equal((final.match(/"[^"]+"/g) || []).length, 16);
+});
+
+test("глава 5 содержит полный набор разделов и соседнюю навигацию", () => {
+  assert.equal((chapterFive.match(/class="toc-link"/g) || []).length, 12);
+  assert.match(chapterFive, /merch-method/);
+  assert.match(chapterFive, /merch-errors/);
+  assert.match(chapterFive, /href="#\/chapter-4"/);
+  assert.match(chapterFive, /href="#\/chapter-6"/);
+  assert.doesNotMatch(chapterFive, /Глава в разработке/);
+});
+
+test("главы 6 и 7 опубликованы и содержат отдельные чек-листы", () => {
+  for (const [number, source, quickCount, finalCount] of [[6, chapterSix, 12, 18], [7, chapterSeven, 11, 18]]) {
+    assert.match(bootstrap, new RegExp('"chapter-' + number + '"'));
+    assert.match(data, new RegExp('id: "chapter-' + number + '"[\\s\\S]*?published: true'));
+    assert.match(source, new RegExp('data-page="chapter-' + number + '"'));
+    assert.match(source, new RegExp('data-checklist="chapter-' + number + ':quick"'));
+    assert.match(source, new RegExp('data-checklist="chapter-' + number + ':final"'));
+    const quick = data.match(new RegExp('"chapter-' + number + ':quick": \\[([\\s\\S]*?)\\n      \\],'))[1];
+    const final = data.match(new RegExp('"chapter-' + number + ':final": \\[([\\s\\S]*?)\\n      \\],'))[1];
+    assert.equal((quick.match(/"[^"]+"/g) || []).length, quickCount);
+    assert.equal((final.match(/"[^"]+"/g) || []).length, finalCount);
+  }
+});
+
+test("главы 6 и 7 содержат полную навигацию без заглушек", () => {
+  assert.equal((chapterSix.match(/class="toc-link"/g) || []).length, 13);
+  assert.equal((chapterSeven.match(/class="toc-link"/g) || []).length, 14);
+  assert.match(chapterSix, /href="#\/chapter-5"/);
+  assert.match(chapterSix, /href="#\/chapter-7"/);
+  assert.match(chapterSeven, /href="#\/chapter-6"/);
+  assert.match(chapterSeven, /href="#\/chapter-8"/);
+  assert.doesNotMatch(chapterSix + chapterSeven, /Глава в разработке/);
+});
+
 test("глава 8 подключена как опубликованная и содержит 27 пунктов", () => {
   assert.match(bootstrap, /"chapter-8"/);
   assert.match(data, /id: "chapter-8"[\s\S]*?published: true/);
@@ -134,16 +183,15 @@ test("единая система статусов использует согл
   assert.doesNotMatch(app, /Начато/);
 });
 
-test("главы в разработке доступны отдельно от статуса публикации", () => {
-  for (const number of [5, 6, 7]) {
-    assert.match(data, new RegExp('id: "chapter-' + number + '"[\\s\\S]*?isAccessible: true, published: false'));
+test("все девять глав опубликованы и доступны", () => {
+  for (let number = 1; number <= 9; number += 1) {
+    assert.match(data, new RegExp('id: "chapter-' + number + '"[\\s\\S]*?isAccessible: true, published: true'));
   }
   assert.doesNotMatch(app, /unavailableCard/);
-  assert.match(app, /Глава в разработке/);
 });
 
 test("на главной сохранён подробный формат общего прогресса", () => {
-  assert.match(index, /<strong>Общий прогресс изучения<\/strong><span data-overall-label>0 из 184 пунктов выполнено \(0%\)<\/span>/);
+  assert.match(index, /<strong>Общий прогресс изучения<\/strong><span data-overall-label>0 из 270 пунктов выполнено \(0%\)<\/span>/);
   assert.match(app, /progress\.completedItems \+ " из " \+ progress\.totalItems \+ " пунктов выполнено \(" \+ progress\.percent \+ "%\)"/);
   assert.match(app, /bar\.style\.width = progress\.exactPercent \+ "%"/);
 });
@@ -151,6 +199,12 @@ test("на главной сохранён подробный формат об�
 test("боковое и мобильное меню показывают только процент для В процессе", () => {
   assert.match(app, /state\.status === "in-progress" \? state\.progress\.percentage \+ "%" : state\.label/);
   assert.doesNotMatch(app, /nav-status[^\n]*В процессе/);
+});
+
+test("мобильные главы используют независимые колонки для названия и статуса", () => {
+  assert.match(app, /class="mobile-chapter-link /);
+  assert.match(app, /<span><i class="mobile-chapter-number">[\s\S]*?<small class="nav-status">/);
+  assert.match(styles, /\.mobile-menu \.mobile-chapter-link\s*\{[\s\S]*?grid-template-columns:\s*minmax\(0, 1fr\) auto/);
 });
 
 test("номера глав не дублируются в генерируемых меню", () => {
@@ -167,9 +221,19 @@ test("звуки темы запускаются только из ручног�
   await access(new URL("../assets/audio/light-on.mp3", import.meta.url));
   await access(new URL("../assets/audio/light-off.mp3", import.meta.url));
   assert.match(app, /theme === "light" \? "light-on\.mp3" : "light-off\.mp3"/);
-  assert.match(app, /themeAudio\.volume = 0\.25/);
+  assert.match(app, /themeAudio\.volume = 0\.15/);
   assert.match(app, /themeAudio\.pause\(\)[\s\S]*?themeAudio\.currentTime = 0/);
   assert.match(app, /setTheme\(nextTheme\);\s*playThemeSound\(nextTheme\)/);
   assert.equal((app.match(/playThemeSound\(nextTheme\)/g) || []).length, 1);
   assert.match(app, /playback\.catch\(function \(\) \{\}\)/);
+});
+
+test("переключатель темы в хедере содержит динамическую подпись и доступные состояния", () => {
+  assert.match(index, /class="theme-control"[\s\S]*?data-theme-label[\s\S]*?class="theme-switch"/);
+  assert.match(app, /label\.textContent = dark \? "Тёмная тема" : "Светлая тема"/);
+  assert.match(app, /button\.setAttribute\("aria-label", dark \? "Включить светлую тему" : "Включить тёмную тему"\)/);
+  assert.match(app, /button\.setAttribute\("aria-pressed", String\(dark\)\)/);
+  [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight, chapterNine].forEach((chapter) => {
+    assert.match(chapter, /chapter-mobile-header[\s\S]*?class="theme-control"[\s\S]*?data-theme-label/);
+  });
 });

@@ -95,6 +95,23 @@ img { display: block; flex: 0 0 auto; }
 .icon-button { min-width: 36px; min-height: 36px; border: 0; padding: 6px; background: none; cursor: pointer; border-radius: 6px; display: inline-grid; place-items: center; }
 .icon-button:hover { background: var(--surface-2); }
 .header-controls { display: flex; align-items: center; gap: 16px; }
+.theme-control {
+  min-height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font: 600 12px/1 "Geist", sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.theme-control:hover { color: var(--text); }
+.theme-control:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.theme-control__label { transition: color .2s ease; }
 .theme-switch {
   width: 44px;
   height: 28px;
@@ -106,6 +123,8 @@ img { display: block; flex: 0 0 auto; }
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
+  flex: 0 0 44px;
+  transition: background-color .2s ease, filter .2s ease;
 }
 .theme-switch > span { width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 1px 4px rgba(0, 0, 0, .25); transition: transform .2s ease; }
 .theme-switch:hover { filter: brightness(1.12); }
@@ -520,7 +539,8 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .home-header .brand strong { font-size: 13px; }
   .home-header .desktop-search { display: none; }
   .home-header .header-controls { gap: 10px; }
-  .home-header .theme-switch { display: inline-flex; }
+  .home-header .theme-control { display: inline-flex; }
+  .home-header .theme-control__label { font-size: 11px; }
   .mobile-menu {
     position: fixed;
     inset: 52px 0 0;
@@ -543,8 +563,15 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   }
   .mobile-menu a, .mobile-menu > span { justify-content: space-between; gap: 10px; }
   .mobile-menu a > span, .mobile-menu > span > span { min-width: 0; flex: 1; }
+  .mobile-menu .mobile-chapter-link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 16px;
+  }
+  .mobile-menu .mobile-chapter-link > span { min-width: 0; overflow-wrap: anywhere; }
   .mobile-menu .nav-status { color: var(--muted-2); font-size: 9px; }
-  .mobile-menu .nav-status { flex: 0 0 auto; white-space: nowrap; }
+  .mobile-menu .nav-status { min-width: max-content; justify-self: end; text-align: right; white-space: nowrap; }
   .mobile-menu .in-progress .nav-status { color: var(--blue-hover); }
   .mobile-menu .completed .nav-status { color: var(--green); }
   .mobile-chapter-number { min-width: 24px; display: inline-block; color: var(--muted-2); font-style: normal; font-weight: 700; }
@@ -585,6 +612,9 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .chapter-mobile-header .brand { gap: 8px; }
   .chapter-mobile-header .brand strong { font-size: 11px; }
   .chapter-mobile-header .header-controls { gap: 10px; }
+  .chapter-mobile-header .theme-control { gap: 7px; padding: 2px; font-size: 10px; }
+  .chapter-mobile-header .theme-switch { width: 38px; height: 24px; flex-basis: 38px; }
+  .chapter-mobile-header .theme-switch > span { width: 18px; height: 18px; }
   .reading-progress { position: absolute; left: 0; right: 0; bottom: -3px; height: 3px; background: var(--line); }
   .reading-progress span { display: block; height: 100%; background: var(--green); }
   .guide-shell { min-height: 100vh; display: block; }
@@ -752,6 +782,15 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .fixture-demo { min-height: 150px; border-width: 8px; }.fixture-demo span { padding: 10px; font-size: 9px; }.fixture-demo i { width: 15px; height: 15px; border-width: 3px; }
   .lightbox-compare div { height: 100px; font-size: 22px; }.cut-demo { padding: 12px; }.cut-demo span { font-size: 8px; }.module-demo { min-height: 110px; gap: 3px; }.module-demo span { font-size: 15px; }
   .toast { bottom: 62px; }
+}
+
+@media (max-width: 460px) {
+  .chapter-mobile-header .brand strong { display: none; }
+}
+
+@media (max-width: 359px) {
+  .home-header .brand strong { display: none; }
+  .home-header .theme-control { gap: 7px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
