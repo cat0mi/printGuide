@@ -439,8 +439,9 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .border-demo > strong { font-size: 12px; }.border-demo.bad > strong { color: var(--red); }.border-demo.good > strong { color: var(--green); }
 .border-demo > div { height: 100px; margin-top: 12px; padding: 14px; background: var(--surface-3); display: grid; place-items: center; color: var(--muted-2); font-size: 10px; }
 .border-demo.bad > div { border: 4px dotted var(--muted-2); }.border-demo.good > div { border: 1px solid var(--green); box-shadow: inset 0 0 0 16px var(--surface-3); }
-.fold-tabs { border: 1px solid var(--line); border-radius: 8px; padding: 3px; display: flex; gap: 3px; background: var(--surface); }.fold-tabs button { flex: 1; border: 0; border-radius: 6px; padding: 8px; background: transparent; color: var(--muted); cursor: pointer; }.fold-tabs button.active { background: var(--blue); color: #fff; }
-.fold-guide { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 22px; }.fold-guide > div { height: 130px; display: grid; grid-template-columns: 100fr 100fr 98fr; }.fold-guide span { border: 1.5px solid var(--cyan); display: grid; place-items: center; color: var(--cyan); font-weight: 700; }.fold-guide span + span { border-left: 0; }.fold-guide span.inner { color: var(--green); background: color-mix(in srgb, var(--green) 8%, transparent); }.fold-guide small { display: block; margin-top: 12px; color: var(--muted); text-align: center; }
+.fold-tabs { border: 1px solid var(--line); border-radius: 8px; padding: 3px; display: flex; gap: 3px; background: var(--surface); }.fold-tabs button { min-width: 0; flex: 1; border: 0; border-radius: 6px; padding: 8px; background: transparent; color: var(--muted); cursor: pointer; transition: background-color .18s ease, color .18s ease, box-shadow .18s ease; }.fold-tabs button:hover { color: var(--text); background: var(--surface-2); }.fold-tabs button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }.fold-tabs button.active, .fold-tabs button[aria-selected="true"] { background: var(--blue); color: #fff; box-shadow: 0 2px 10px color-mix(in srgb, var(--blue) 30%, transparent); }
+.fold-panels { min-width: 0; }.fold-panel { display: grid; gap: 12px; }.fold-panel[hidden] { display: none; }.fold-panel > p { margin: 0; }
+.fold-guide { min-width: 0; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); padding: 22px; overflow: hidden; }.fold-guide > div { height: 130px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }.fold-guide span { min-width: 0; border: 1.5px solid var(--cyan); display: grid; place-items: center; gap: 6px; padding: 8px; color: var(--cyan); font-weight: 700; text-align: center; }.fold-guide span + span { border-left: 0; }.fold-guide span b { font-size: 11px; font-weight: 600; }.fold-guide-euro > div { grid-template-columns: 100fr 100fr 98fr; }.fold-guide span.inner, .fold-guide-window span.center { color: var(--green); background: color-mix(in srgb, var(--green) 8%, transparent); }.fold-guide-accordion span { font-size: 22px; }.fold-guide-window > div { grid-template-columns: 1fr 1.4fr 1fr; }.fold-guide-window span:not(.center) { font-size: 22px; }.fold-guide small { display: block; margin-top: 12px; color: var(--muted); text-align: center; }
 .terminology { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }.terminology article { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }.terminology small { color: var(--muted); font-size: 11px; }
 .page-shape, .leaf-shape, .spread-shape { width: 55px; height: 70px; border: 1.5px solid var(--blue); }.leaf-shape, .spread-shape { width: 90px; display: flex; border: 0; gap: 3px; }.leaf-shape i, .spread-shape i { flex: 1; border: 1.5px solid var(--cyan); }.spread-shape i { border-color: var(--green); transform: perspective(40px) rotateY(4deg); }
 .binding-grid { display: grid; gap: 12px; }.binding-grid article, .process-card { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 16px; display: flex; align-items: center; gap: 16px; }.binding-grid article > span, .process-card > span { width: 42px; height: 42px; flex: 0 0 42px; border-radius: 10px; background: var(--surface-2); display: grid; place-items: center; color: var(--cyan); font-size: 21px; }.binding-grid h3, .process-card strong { margin: 0; font: 700 14px/1.2 "Outfit"; }.binding-grid p, .process-card p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
@@ -467,6 +468,24 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .technology-table td:first-child { color: var(--text); font-weight: 650; white-space: nowrap; }
 .technology-table tbody tr:last-child td { border-bottom: 0; }
 .technology-note { margin: 14px 0 0; padding: 14px 16px; border-left: 3px solid var(--cyan); border-radius: 0 10px 10px 0; background: var(--surface-soft); color: var(--muted); font-size: 13px; line-height: 1.55; }
+.transfer-method-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.transfer-method-grid .list-card { min-height: 0; }
+.illustrator-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 10px; }
+.illustrator-tool-card { min-width: 0; border-radius: 10px; }
+.illustrator-tool-card .accordion-trigger { align-items: flex-start; min-height: 76px; padding: 15px; }
+.illustrator-tool-card .accordion-trigger > span { min-width: 0; align-items: flex-start; }
+.illustrator-tool-card .accordion-trigger > span > span { min-width: 0; display: grid; gap: 6px; }
+.illustrator-tool-card .accordion-trigger strong { color: var(--cyan); font: 700 13px/1.25 "Outfit", sans-serif; }
+.illustrator-tool-card .accordion-trigger small { color: var(--muted); font-size: 11px; font-weight: 400; line-height: 1.45; }
+.illustrator-tool-card .accordion-content { max-height: 0; padding-inline: 18px; overflow-wrap: anywhere; }
+.illustrator-tool-card.expanded .accordion-content { max-height: 900px; padding: 0 18px 18px; }
+.illustrator-tool-card .accordion-content p,
+.illustrator-tool-card .accordion-content div { margin: 14px 0 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+.illustrator-tool-card .accordion-content strong { color: var(--text); }
+.illustrator-tool-card .accordion-content ol { margin: 8px 0 0; padding-left: 20px; }
+.illustrator-tool-card .accordion-content li + li { margin-top: 5px; }
+.illustrator-tool-card .accordion-content code { white-space: normal; overflow-wrap: anywhere; }
+.illustrator-tool-card .accordion-content .tool-warning { padding: 10px 12px; border-left: 3px solid var(--red); background: color-mix(in srgb, var(--red) 7%, transparent); border-radius: 0 8px 8px 0; }
 .formula-card { border: 1px solid var(--blue); border-radius: 12px; background: color-mix(in srgb, var(--blue) 7%, var(--surface)); padding: 20px; display: flex; flex-direction: column; gap: 10px; }.formula-card small { color: var(--cyan); font-weight: 700; }.formula-card code { color: var(--text); font-size: 18px; }
 .hierarchy-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px; display: grid; gap: 10px; }.hierarchy-demo span { display: flex; align-items: center; gap: 12px; color: var(--muted); }.hierarchy-demo b { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; color: white; }.hierarchy-demo span:nth-child(2) b { background: var(--cyan); color: #06111a; }.hierarchy-demo span:nth-child(3) b { background: var(--green); }
 .type-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 30px; display: flex; flex-direction: column; gap: 12px; }.type-demo strong { font: 800 34px/1 "Outfit"; }.type-demo span { font-size: 20px; font-weight: 600; }.type-demo small { color: var(--muted); }
@@ -761,10 +780,13 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .orientation-panel button { padding: 9px; font-size: 10px; }
   .subheading { font-size: 13px; }
   .border-demo > div { height: 80px; }
-  .fold-tabs button { padding: 6px 3px; font-size: 9px; }
+  .fold-tabs { width: 100%; overflow-x: auto; }
+  .fold-tabs button { min-width: 84px; padding: 7px 6px; font-size: 9px; white-space: nowrap; }
   .fold-guide { border-radius: 9px; padding: 12px; }
   .fold-guide > div { height: 90px; }
-  .fold-guide span { font-size: 9px; }
+  .fold-guide span { padding: 5px; font-size: 9px; }
+  .fold-guide span b { font-size: 7px; }
+  .fold-guide-accordion span, .fold-guide-window span:not(.center) { font-size: 15px; }
   .fold-guide small { font-size: 8px; }
   .terminology { gap: 6px; }
   .terminology article { border-radius: 8px; padding: 10px 5px; }
@@ -789,6 +811,14 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .technology-table { min-width: 620px; font-size: 11px; }
   .technology-table th, .technology-table td { padding: 10px; }
   .technology-note { padding: 12px 13px; font-size: 11px; }
+  .transfer-method-grid, .illustrator-tools-grid { grid-template-columns: 1fr; gap: 8px; }
+  .illustrator-tool-card .accordion-trigger { min-height: 0; padding: 12px; }
+  .illustrator-tool-card .accordion-trigger strong { font-size: 11px; }
+  .illustrator-tool-card .accordion-trigger small,
+  .illustrator-tool-card .accordion-content p,
+  .illustrator-tool-card .accordion-content div { font-size: 9px; }
+  .illustrator-tool-card .accordion-content { padding-inline: 14px; }
+  .illustrator-tool-card.expanded .accordion-content { padding: 0 14px 14px; }
   .formula-card { padding: 12px; font-size: 10px; }.formula-card code { font-size: 12px; }
   .hierarchy-demo { padding: 12px; font-size: 10px; }.hierarchy-demo b { width: 23px; height: 23px; }
   .type-demo { padding: 18px; }.type-demo strong { font-size: 21px; }.type-demo span { font-size: 14px; }

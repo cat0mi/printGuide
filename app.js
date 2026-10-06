@@ -381,6 +381,22 @@
     document.querySelectorAll("[data-mobile-menu]").forEach(function (menu) { menu.innerHTML = mobileMenuMarkup(); });
   }
 
+  function activateFoldTab(tab, moveFocus) {
+    var tabList = tab && tab.closest('[role="tablist"]');
+    if (!tabList || !tab.matches("[data-fold-tab]")) return;
+    var section = tabList.closest(".guide-section");
+    tabList.querySelectorAll('[role="tab"]').forEach(function (button) {
+      var active = button === tab;
+      button.classList.toggle("active", active);
+      button.setAttribute("aria-selected", String(active));
+      button.setAttribute("tabindex", active ? "0" : "-1");
+    });
+    section.querySelectorAll('[role="tabpanel"]').forEach(function (panel) {
+      panel.hidden = panel.id !== tab.dataset.foldTab;
+    });
+    if (moveFocus) tab.focus();
+  }
+
   document.addEventListener("click", function (event) {
     var themeButton = event.target.closest("[data-theme-toggle]");
     if (themeButton) {
@@ -488,6 +504,13 @@
       showToast("Выбрано: " + orientation.textContent.trim()); return;
     }
 
+    var foldTab = event.target.closest("[data-fold-tab]");
+    if (foldTab) {
+      event.preventDefault();
+      activateFoldTab(foldTab, false);
+      return;
+    }
+
     var clear = event.target.closest(".search-clear");
     if (clear) {
       var input = clear.closest("label").querySelector("input");
@@ -508,7 +531,21 @@
     if (event.target.matches("[data-guide-search]")) filterToc(event.target);
   });
 
-  document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeMenus(); });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeMenus();
+    var foldTab = event.target.closest && event.target.closest("[data-fold-tab]");
+    if (!foldTab) return;
+    var tabs = Array.from(foldTab.closest('[role="tablist"]').querySelectorAll('[role="tab"]'));
+    var current = tabs.indexOf(foldTab);
+    var next = current;
+    if (event.key === "ArrowRight" || event.key === "ArrowDown") next = (current + 1) % tabs.length;
+    else if (event.key === "ArrowLeft" || event.key === "ArrowUp") next = (current - 1 + tabs.length) % tabs.length;
+    else if (event.key === "Home") next = 0;
+    else if (event.key === "End") next = tabs.length - 1;
+    else return;
+    event.preventDefault();
+    activateFoldTab(tabs[next], true);
+  });
   window.addEventListener("hashchange", activateRoute);
 
   renderPlaceholderPages();

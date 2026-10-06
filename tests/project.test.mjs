@@ -15,6 +15,7 @@ const chapterSix = await readFile(new URL("../chapters/chapter-6/index.html", im
 const chapterSeven = await readFile(new URL("../chapters/chapter-7/index.html", import.meta.url), "utf8");
 const chapterEight = await readFile(new URL("../chapters/chapter-8/index.html", import.meta.url), "utf8");
 const chapterNine = await readFile(new URL("../chapters/chapter-9/index.html", import.meta.url), "utf8");
+const chapterTen = await readFile(new URL("../chapters/chapter-10/index.html", import.meta.url), "utf8");
 const data = await readFile(new URL("../data.js", import.meta.url), "utf8");
 const bootstrap = await readFile(new URL("../bootstrap.js", import.meta.url), "utf8");
 const pdfChecklist = await readFile(new URL("../pdf-checklist.js", import.meta.url), "utf8");
@@ -23,6 +24,40 @@ const packageJson = JSON.parse(await readFile(new URL("../package.json", import.
 test("главы 3–9 имеют маршруты на главной", () => {
   for (let number = 3; number <= 9; number += 1) assert.match(index, new RegExp('href="#/chapter-' + number + '"'));
   assert.match(app, /renderPlaceholderPages/);
+});
+
+test("глава 10 подключена как опубликованная практическая глава", () => {
+  assert.match(index, /data-chapter-card="chapter-10"[\s\S]*?href="#\/chapter-10"/);
+  assert.match(index, /data-chapter-slot="chapter-10"/);
+  assert.match(bootstrap, /"chapter-10"/);
+  assert.match(data, /id: "chapter-10"[\s\S]*?isAccessible: true, published: true/);
+  assert.match(chapterTen, /data-page="chapter-10"/);
+  assert.match(chapterTen, /data-checklist="chapter-10:quick"/);
+  assert.match(chapterTen, /data-checklist="chapter-10:final"/);
+  assert.equal((chapterTen.match(/class="toc-link"/g) || []).length, 12);
+  assert.doesNotMatch(chapterTen, /chapter-title"><span>10<\/span><h1>10/);
+});
+
+test("чек-листы главы 10 содержат 11 и 14 пунктов", () => {
+  const quick = data.match(/"chapter-10:quick": \[([\s\S]*?)\n      \],/)[1];
+  const final = data.match(/"chapter-10:final": \[([\s\S]*?)\n      \]/)[1];
+  assert.equal((quick.match(/"[^"]+"/g) || []).length, 11);
+  assert.equal((final.match(/"[^"]+"/g) || []).length, 14);
+  assert.equal((chapterTen.match(/data-download-checklist/g) || []).length, 2);
+  assert.match(chapterTen, /Макет корректно перенесён из Figma/);
+});
+
+test("полезные функции Illustrator раскрываются в независимых доступных карточках", () => {
+  const toolsSection = chapterTen.match(/<section class="guide-section" id="figma-tools">([\s\S]*?)<\/section>/)?.[1] || "";
+  assert.equal((toolsSection.match(/class="accordion-item illustrator-tool-card"/g) || []).length, 11);
+  assert.equal((toolsSection.match(/aria-expanded="false"/g) || []).length, 11);
+  assert.match(toolsSection, /<strong>Pathfinder<\/strong>/);
+  assert.match(toolsSection, /<strong>Shape Builder<\/strong>/);
+  assert.match(toolsSection, /Для чего нужна:/);
+  assert.match(toolsSection, /Как сделать:/);
+  assert.match(toolsSection, /Важно:/);
+  assert.match(toolsSection, /Window → Links/);
+  assert.match(toolsSection, /File → Package/);
 });
 
 test("Nextcloud присутствует в главах 1, 2 и безопасно открывается", () => {
@@ -52,6 +87,18 @@ test("содержание главы использует IntersectionObserver 
 test("у глав 1 и 2 нет статически активного первого пункта", () => {
   assert.doesNotMatch(chapterOne, /toc-link active/);
   assert.doesNotMatch(chapterTwo, /toc-link active/);
+});
+
+test("табы фальцовки доступны и переключаются через делегирование событий", () => {
+  assert.match(chapterTwo, /role="tablist"/);
+  assert.equal((chapterTwo.match(/role="tab"/g) || []).length, 3);
+  assert.equal((chapterTwo.match(/role="tabpanel"/g) || []).length, 3);
+  assert.match(chapterTwo, /fold-panel-euro[\s\S]*?100 мм[\s\S]*?100 мм[\s\S]*?98 мм/);
+  assert.match(chapterTwo, /fold-panel-accordion[\s\S]*?Равная панель/);
+  assert.match(chapterTwo, /fold-panel-window[\s\S]*?Центральная область/);
+  assert.match(app, /function activateFoldTab\(/);
+  assert.match(app, /event\.target\.closest\("\[data-fold-tab\]"\)/);
+  assert.match(app, /ArrowRight[\s\S]*?ArrowLeft[\s\S]*?Home[\s\S]*?End/);
 });
 
 test("разделы главы 1 пронумерованы последовательно и ссылки содержания совпадают", () => {
@@ -181,7 +228,7 @@ test("группы главы 9 используют диапазоны одно
   assert.match(app, /var index = start \+ localIndex/);
   assert.match(chapterNine, /data-check-start="0" data-check-end="6"/);
   assert.match(chapterNine, /data-check-start="31" data-check-end="37"/);
-  assert.match(chapterNine, /Вернуться на главную/);
+  assert.match(chapterNine, /href="#\/chapter-10"/);
   assert.match(chapterNine, /Макет проверен и готов к передаче в производство/);
 });
 
@@ -194,8 +241,8 @@ test("единая система статусов использует согл
   assert.doesNotMatch(app, /Начато/);
 });
 
-test("все девять глав опубликованы и доступны", () => {
-  for (let number = 1; number <= 9; number += 1) {
+test("все десять глав опубликованы и доступны", () => {
+  for (let number = 1; number <= 10; number += 1) {
     assert.match(data, new RegExp('id: "chapter-' + number + '"[\\s\\S]*?isAccessible: true, published: true'));
   }
   assert.doesNotMatch(app, /unavailableCard/);
@@ -274,7 +321,7 @@ test("чек-листы скачиваются как текстовый PDF с 
 });
 
 test("PDF-экспорт доступен у быстрых и финальных чек-листов всех глав", () => {
-  [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight].forEach((chapter) => {
+  [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight, chapterTen].forEach((chapter) => {
     assert.equal((chapter.match(/data-download-checklist/g) || []).length, 2);
     assert.match(chapter, /data-checklist="chapter-\d+:quick"[\s\S]*?data-download-checklist/);
     assert.match(chapter, /data-checklist="chapter-\d+:final"[\s\S]*?data-download-checklist/);

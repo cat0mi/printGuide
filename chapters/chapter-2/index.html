@@ -118,12 +118,26 @@
             <section class="guide-section" id="folding">
               <h2 class="section-title"><span>5.</span>ФАЛЬЦОВКА И БУКЛЕТЫ (ЛИНИИ СГИБА)</h2>
               <p>Фальцовка — это процесс складывания листа. Каждый сгиб должен быть точно рассчитан в верстке. Самая частая ошибка — считать, что все панели складывающегося буклета должны быть одинаковой ширины. Внутреннюю панель евробуклета часто делают примерно на 1,5–2 мм уже, но точный размер зависит от бумаги, схемы фальцовки и оборудования типографии.</p>
-              <div class="fold-tabs"><button class="active" type="button">Еврофальц</button><button type="button">Гармошка</button><button type="button">Оконный</button></div>
-              <div class="fold-guide">
-                <div><span>100 мм</span><span>100 мм</span><span class="inner">98 мм</span></div>
-                <small>Внутренняя панель немного уже — точный размер запросите у типографии</small>
+              <div class="fold-tabs" role="tablist" aria-label="Виды фальцовки">
+                <button class="active" id="fold-tab-euro" data-fold-tab="fold-panel-euro" type="button" role="tab" aria-selected="true" aria-controls="fold-panel-euro" tabindex="0">Еврофальц</button>
+                <button id="fold-tab-accordion" data-fold-tab="fold-panel-accordion" type="button" role="tab" aria-selected="false" aria-controls="fold-panel-accordion" tabindex="-1">Гармошка</button>
+                <button id="fold-tab-window" data-fold-tab="fold-panel-window" type="button" role="tab" aria-selected="false" aria-controls="fold-panel-window" tabindex="-1">Оконный</button>
               </div>
-              <div class="callout info"><span class="callout-icon">i</span><strong>Не рассчитывайте панели «на глаз». Типография может предоставить готовую развёртку под оборудование.</strong></div>
+              <div class="fold-panels">
+                <section class="fold-panel" id="fold-panel-euro" role="tabpanel" aria-labelledby="fold-tab-euro">
+                  <p>Три панели складываются внутрь последовательно. Внутренняя панель обычно немного уже остальных, чтобы буклет свободно закрывался.</p>
+                  <div class="fold-guide fold-guide-euro" aria-label="Схема еврофальца: панели 100, 100 и 98 миллиметров"><div><span>100 мм</span><span>100 мм</span><span class="inner">98 мм</span></div><small>Размеры приведены для примера. Точные размеры панелей зависят от бумаги, направления сгиба и оборудования типографии.</small></div>
+                </section>
+                <section class="fold-panel" id="fold-panel-accordion" role="tabpanel" aria-labelledby="fold-tab-accordion" hidden>
+                  <p>Панели складываются поочерёдно в разные стороны, образуя гармошку. Обычно панели имеют одинаковую ширину, но размеры всё равно нужно подтвердить у типографии.</p>
+                  <div class="fold-guide fold-guide-accordion" aria-label="Схема гармошки из трёх равных панелей с противоположными направлениями сгибов"><div><span>←<b>Равная панель</b></span><span>→<b>Равная панель</b></span><span>←<b>Равная панель</b></span></div><small>Не перепутайте направление соседних сгибов. Проверьте порядок сторон на бумажном прототипе.</small></div>
+                </section>
+                <section class="fold-panel" id="fold-panel-window" role="tabpanel" aria-labelledby="fold-tab-window" hidden>
+                  <p>Боковые панели складываются внутрь навстречу друг другу. На макете нужно правильно определить лицевую сторону, внутреннюю часть и порядок закрывания створок.</p>
+                  <div class="fold-guide fold-guide-window" aria-label="Схема оконного фальца: две боковые створки складываются к центральной области"><div><span>→<b>Створка</b></span><span class="center">Центральная область</span><span>←<b>Створка</b></span></div><small>Между створками может потребоваться технологический зазор. Точные размеры запросите у типографии.</small></div>
+                </section>
+              </div>
+              <div class="callout info"><span class="callout-icon">i</span><strong>Схемы показывают принцип фальцовки, а не готовые производственные размеры. Перед началом работы запросите у типографии развёртку или точные размеры каждой панели.</strong></div>
             </section>
 
             <section class="guide-section" id="spread">
