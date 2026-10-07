@@ -43,7 +43,6 @@
               <h2>Основы подготовки макетов к печати</h2>
               <p class="lead">В этой главе собраны универсальные правила, которые необходимо проверить перед передачей любого макета в печать.</p>
               <p>Технические требования могут отличаться в зависимости от материала, способа печати и подрядчика. Перед началом работы обязательно запросите требования и шаблон у типографии. Если они отличаются от правил этого гайда, приоритет имеют требования производства.</p>
-              <div class="callout danger"><span class="callout-icon"><img src="assets/icons/alert.svg" alt="" width="14" height="14" /></span><strong>Сначала запросите актуальные технические требования типографии. Если они отличаются от этого гайда, приоритет имеют требования производства.</strong></div>
             </header>
 
             <section class="checklist-card" id="quick-check">
@@ -88,6 +87,32 @@
                 <div class="legend"><span class="red">Вылет</span><span class="blue">Линия реза</span><span class="cyan">Безопасная зона</span></div>
               </div>
               <p><b>Вылет</b> — продолжение фона за линию реза. Ориентир часто составляет 2–5 мм с каждой стороны, но точное значение задаёт типография. <b>Безопасная зона</b> определяется требованиями производства и конструкцией конкретного изделия.</p>
+              <article class="outline-guide bleed-setup-guide">
+                <h3>Как задать и изменить вылеты в Illustrator</h3>
+                <div class="bleed-setup-columns">
+                  <section>
+                    <h4>При создании документа</h4>
+                    <ol>
+                      <li><span>1</span><p>Откройте <strong>Файл → Создать</strong> / <strong>File → New</strong>.</p></li>
+                      <li><span>2</span><p>Укажите размер готового изделия без вылетов. Например, для A4 — <strong>210 × 297 мм</strong>.</p></li>
+                      <li><span>3</span><p>В полях <strong>Вылет / Bleed</strong> задайте значения сверху, снизу, слева и справа. Если поля скрыты, откройте дополнительные настройки документа.</p></li>
+                      <li><span>4</span><p>Для одинаковых значений включите значок цепочки. Например, задайте <strong>3 мм</strong> со всех сторон, только если это соответствует требованиям типографии.</p></li>
+                    </ol>
+                  </section>
+                  <section>
+                    <h4>В уже созданном документе</h4>
+                    <ol>
+                      <li><span>1</span><p>Откройте <strong>Файл → Параметры документа</strong> / <strong>File → Document Setup</strong>.</p></li>
+                      <li><span>2</span><p>Измените значения в разделе <strong>Вылет / Bleed</strong>.</p></li>
+                      <li><span>3</span><p>Нажмите OK. Красная линия вокруг монтажной области покажет границу вылетов.</p></li>
+                    </ol>
+                  </section>
+                </div>
+                <div class="bleed-manual-note"><strong>Фон нужно продлить вручную</strong><p>Продлите фон и изображения, доходящие до края изделия, до красной линии. Само указание вылетов не растягивает объекты автоматически.</p></div>
+                <div class="bleed-layout-rules"><h4>Что сделать с макетом</h4><ul class="bullet-list compact"><li>Оставьте размер монтажной области равным размеру готового изделия — увеличивать её на величину вылетов не нужно.</li><li>Держите текст и логотипы внутри безопасной зоны: вылеты и безопасные отступы — разные вещи.</li></ul></div>
+                <div class="bleed-pdf-step"><h4>При сохранении PDF</h4><p>В окне Adobe PDF откройте <strong>Метки и выпуск за обрез / Marks and Bleeds</strong> и включите <strong>Использовать параметры выпуска за обрез документа / Use Document Bleed Settings</strong>. Метки реза добавляйте только по требованиям типографии.</p></div>
+                <div class="outline-tip"><strong>Как убрать вылеты</strong><p>Установите 0 мм в параметрах документа. Размер монтажной области при этом не изменится.</p></div>
+              </article>
               <div class="compare-grid">
                 <article class="list-card good"><strong>НА ВЫЛЕТ НАДО ПРОДОЛЖАТЬ:</strong><ul><li>фон и плашки</li><li>фотографии у края</li><li>декоративные элементы</li></ul></article>
                 <article class="list-card bad"><strong>НА ВЫЛЕТ НЕЛЬЗЯ ВЫНОСИТЬ:</strong><ul><li>текст и логотипы</li><li>контакты и QR-коды</li><li>тонкие рамки</li></ul></article>
@@ -98,10 +123,45 @@
               <h2 class="section-title"><span>4.</span>ЦВЕТОВАЯ МОДЕЛЬ</h2>
               <p>Для большинства видов печати используется CMYK, но точные цветовую модель и профиль всегда задаёт типография. Цвета в RGB предназначены для экранов и при печати могут стать значительно темнее или потерять сочность.</p>
               <div class="color-models">
-                <article><div class="rgb-rings"><i></i><i></i><i></i></div><strong>RGB (ЭКРАН)</strong><small>Световая модель</small></article>
-                <span>→</span>
-                <article><div class="cmyk-rings"><i></i><i></i><i></i></div><strong>CMYK (ПЕЧАТЬ)</strong><small>Красочная модель</small></article>
+                <article class="color-model-card">
+                  <svg class="color-venn" viewBox="0 0 340 210" role="img" aria-labelledby="rgb-title rgb-desc">
+                    <title id="rgb-title">RGB — экран</title><desc id="rgb-desc">Красный, зелёный и синий световые каналы с жёлтым, голубым, пурпурным и белым пересечениями.</desc>
+                    <defs>
+                      <clipPath id="rgb-new-r-clip" clipPathUnits="userSpaceOnUse"><circle cx="130" cy="70" r="65" /></clipPath>
+                      <clipPath id="rgb-new-g-clip" clipPathUnits="userSpaceOnUse"><circle cx="210" cy="70" r="65" /></clipPath>
+                    </defs>
+                    <circle cx="130" cy="70" r="65" fill="#ff2028" />
+                    <circle cx="210" cy="70" r="65" fill="#00d92f" />
+                    <circle cx="170" cy="139.282" r="65" fill="#164cff" />
+                    <circle cx="210" cy="70" r="65" fill="#ffe600" clip-path="url(#rgb-new-r-clip)" />
+                    <circle cx="170" cy="139.282" r="65" fill="#ff00d4" clip-path="url(#rgb-new-r-clip)" />
+                    <circle cx="170" cy="139.282" r="65" fill="#00e5ef" clip-path="url(#rgb-new-g-clip)" />
+                    <g clip-path="url(#rgb-new-r-clip)"><g clip-path="url(#rgb-new-g-clip)"><circle cx="170" cy="139.282" r="65" fill="#ffffff" /></g></g>
+                    <text x="92" y="58">R</text><text x="248" y="58">G</text><text x="170" y="181" text-anchor="middle">B</text>
+                  </svg>
+                  <strong>RGB — экран</strong><small>R — Red · G — Green · B — Blue</small>
+                </article>
+                <article class="color-model-card">
+                  <svg class="color-venn" viewBox="0 0 340 210" role="img" aria-labelledby="cmyk-title cmyk-desc">
+                    <title id="cmyk-title">CMYK — печать</title><desc id="cmyk-desc">Голубой, пурпурный и жёлтый каналы с синим, зелёным, красным и тёмным пересечениями; рядом отдельная чёрная краска K.</desc>
+                    <defs>
+                      <clipPath id="cmyk-new-c-clip" clipPathUnits="userSpaceOnUse"><circle cx="75" cy="70" r="65" /></clipPath>
+                      <clipPath id="cmyk-new-m-clip" clipPathUnits="userSpaceOnUse"><circle cx="155" cy="70" r="65" /></clipPath>
+                    </defs>
+                    <circle cx="75" cy="70" r="65" fill="#00dcea" />
+                    <circle cx="155" cy="70" r="65" fill="#f000c8" />
+                    <circle cx="115" cy="139.282" r="65" fill="#ffe600" />
+                    <circle cx="155" cy="70" r="65" fill="#2447e8" clip-path="url(#cmyk-new-c-clip)" />
+                    <circle cx="115" cy="139.282" r="65" fill="#00b83f" clip-path="url(#cmyk-new-c-clip)" />
+                    <circle cx="115" cy="139.282" r="65" fill="#f1262d" clip-path="url(#cmyk-new-m-clip)" />
+                    <g clip-path="url(#cmyk-new-c-clip)"><g clip-path="url(#cmyk-new-m-clip)"><circle cx="115" cy="139.282" r="65" fill="#20242b" /></g></g>
+                    <circle class="k-sample" cx="275" cy="104" r="32" fill="#050505" /><text class="k-letter" x="275" y="113" text-anchor="middle">K</text>
+                    <text x="37" y="58">C</text><text x="193" y="58">M</text><text x="115" y="181" text-anchor="middle">Y</text>
+                  </svg>
+                  <strong>CMYK — печать</strong><small>C — Cyan · M — Magenta · Y — Yellow · K — Black</small>
+                </article>
               </div>
+              <p class="color-model-note">Схемы условные: RGB показывает смешение света, CMYK — печатные краски. Чёрная краска K используется отдельно.</p>
               <div class="callout danger"><span class="callout-icon"><img src="assets/icons/alert.svg" alt="" width="14" height="14" /></span><strong>Не доверяйте экранному цвету. Проверяйте значения CMYK и используйте цветопробу для ответственных тиражей.</strong></div>
             </section>
 
@@ -143,7 +203,18 @@
                 <span><b>◇</b><small>Кривые</small></span><i>→</i>
                 <span class="success"><b>✓</b><small>Готово</small></span>
               </div>
-              <div class="callout info"><span class="callout-icon">i</span><strong>Всегда сохраняйте отдельную редактируемую версию файла до перевода шрифтов в кривые.</strong></div>
+              <article class="outline-guide">
+                <h3>Как перевести текст в кривые в Illustrator</h3>
+                <ol>
+                  <li><span>1</span><p>Сохраните отдельную редактируемую версию файла с живым текстом: после перевода в кривые текст нельзя будет редактировать как обычный текст.</p></li>
+                  <li><span>2</span><p>Выделите нужные текстовые объекты инструментом «Выделение» (<kbd>V</kbd>).</p></li>
+                  <li><span>3</span><p>Выберите <strong>Текст → Создать кривые</strong> / <strong>Type → Create Outlines</strong>.</p></li>
+                  <li class="outline-shortcuts"><span>4</span><p>Горячие клавиши: <kbd>Shift</kbd> + <kbd>Ctrl</kbd> + <kbd>O</kbd> на Windows; <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>O</kbd> на Mac.</p></li>
+                  <li><span>5</span><p>Проверьте результат: буквы должны выделяться как векторные контуры. Убедитесь, что внешний вид текста сохранился.</p></li>
+                </ol>
+                <div class="outline-tip"><strong>Быстро выделить весь текст</strong><p>Используйте <b>Выделение → По типу объекта → Текстовые объекты</b> / <b>Select → Object → Text Objects</b>. Проверьте заблокированные и скрытые слои отдельно.</p></div>
+                <div class="outline-warning"><strong>Важно</strong><p>Перевод в кривые не исправляет отсутствующий или подменённый шрифт. Сначала проверьте, что текст отображается правильным шрифтом.</p></div>
+              </article>
             </section>
 
             <section class="guide-section" id="section-9">

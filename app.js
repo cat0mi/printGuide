@@ -10,6 +10,7 @@
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var scrollSpyObserver = null;
   var activeSectionByPage = {};
+  var scrollRequest = 0;
   var themeAudio = null;
 
   if ("scrollRestoration" in history) history.scrollRestoration = "manual";
@@ -234,7 +235,11 @@
   }
 
   function setActiveSection(pageId, sectionId, replaceHash) {
-    if (!sectionId || activeSectionByPage[pageId] === sectionId) return;
+    if (!sectionId) return;
+    if (activeSectionByPage[pageId] === sectionId) {
+      if (replaceHash && getRoute().page === pageId) history.replaceState(null, "", "#/" + pageId + "/" + sectionId);
+      return;
+    }
     activeSectionByPage[pageId] = sectionId;
     var page = document.querySelector('[data-page="' + pageId + '"]');
     if (!page) return;
@@ -266,9 +271,47 @@
   function scrollToSection(pageId, sectionId, behavior) {
     var target = document.getElementById(sectionId);
     if (!target) return;
+    var request = ++scrollRequest;
+    var scrollBehavior = behavior || (reduceMotion ? "auto" : "smooth");
     setActiveSection(pageId, sectionId, false);
     var top = window.scrollY + target.getBoundingClientRect().top - getHeaderOffset();
-    window.scrollTo({ top: Math.max(0, top), behavior: behavior || (reduceMotion ? "auto" : "smooth") });
+    window.scrollTo({ top: Math.max(0, top), behavior: scrollBehavior });
+
+    function settleActiveSection() {
+      if (request !== scrollRequest) return;
+      chooseActiveSection(document.querySelector('[data-page="' + pageId + '"]'));
+    }
+
+    if (scrollBehavior === "auto") window.requestAnimationFrame(settleActiveSection);
+    else {
+      var fallback = window.setTimeout(settleActiveSection, 3000);
+      window.addEventListener("scrollend", function () {
+        window.clearTimeout(fallback);
+        settleActiveSection();
+      }, { once: true });
+    }
+  }
+
+  function normalizeTocNumbering() {
+    document.querySelectorAll('.page[data-page^="chapter-"]').forEach(function (page) {
+      page.querySelectorAll(".chapter-toc .toc-link").forEach(function (link, index) {
+        var number = index + 1;
+        var label = link.textContent.trim().replace(/^\d+\.\s*/, "");
+        var sectionId = link.getAttribute("href").split("/").pop();
+        var target = document.getElementById(sectionId);
+        var heading = target && target.querySelector("h2");
+        link.textContent = number + ". " + label;
+        if (!heading) return;
+        var marker = heading.firstElementChild;
+        if (marker && marker.tagName === "SPAN" && /^[!\d.]+$/.test(marker.textContent.trim())) marker.textContent = number + ".";
+        else if (!/^\d+\./.test(heading.textContent.trim())) {
+          var numberMarker = document.createElement("span");
+          numberMarker.textContent = number + ".";
+          heading.insertBefore(numberMarker, heading.firstChild);
+          heading.insertBefore(document.createTextNode(" "), numberMarker.nextSibling);
+        }
+      });
+    });
   }
 
   function initMobileToc() {
@@ -400,20 +443,26 @@
   }
 
   function renderMerchExamples() {
-    document.querySelectorAll("[data-merch-examples]").forEach(function (container) {
-      container.innerHTML = (data.merchExamples || []).map(function (example, exampleIndex) {
+    [
+      { selector: "[data-print-examples]", collection: "printExamples" },
+      { selector: "[data-merch-examples]", collection: "merchExamples" },
+      { selector: "[data-packaging-examples]", collection: "packagingExamples" }
+    ].forEach(function (config) {
+      document.querySelectorAll(config.selector).forEach(function (container) {
+        container.innerHTML = (data[config.collection] || []).map(function (example, exampleIndex) {
         var first = example.variants[0];
-        return '<article class="merch-example-card" data-merch-card="' + exampleIndex + '">' +
+        return '<article class="merch-example-card" data-merch-card="' + exampleIndex + '" data-example-collection="' + config.collection + '">' +
           '<button class="merch-example-preview" type="button" data-merch-preview aria-label="Увеличить превью: ' + escapeHtml(example.title) + '">' +
             '<img src="' + escapeHtml(first.preview) + '" alt="' + escapeHtml(first.alt) + '" width="' + first.width + '" height="' + first.height + '" loading="lazy">' +
             '<span aria-hidden="true">Увеличить ↗</span>' +
           '</button>' +
-          '<div class="merch-example-body"><div class="merch-variant-switcher" role="group" aria-label="Варианты превью: ' + escapeHtml(example.title) + '">' +
+          '<div class="merch-example-body">' + (example.variants.length > 1 ? '<div class="merch-variant-switcher" role="group" aria-label="Варианты превью: ' + escapeHtml(example.title) + '">' +
             example.variants.map(function (variant, variantIndex) { return '<button type="button" data-merch-variant="' + variantIndex + '" aria-pressed="' + String(variantIndex === 0) + '" class="' + (variantIndex === 0 ? "active" : "") + '">' + escapeHtml(variant.label) + '</button>'; }).join("") +
-          '</div><h3>' + escapeHtml(example.title) + '</h3><p>' + escapeHtml(example.description) + '</p>' +
+          '</div>' : '') + '<h3>' + escapeHtml(example.title) + '</h3><p>' + escapeHtml(example.description) + '</p>' +
           '<a class="button secondary merch-example-link" href="' + escapeHtml(example.nextcloudUrl) + '" target="_blank" rel="noopener noreferrer">Открыть файлы в Nextcloud ↗</a></div>' +
         '</article>';
-      }).join("");
+        }).join("");
+      });
     });
   }
 
@@ -551,7 +600,7 @@
     var merchVariant = event.target.closest("[data-merch-variant]");
     if (merchVariant) {
       var merchCard = merchVariant.closest("[data-merch-card]");
-      var merchExample = (data.merchExamples || [])[Number(merchCard.dataset.merchCard)];
+      var merchExample = (data[merchCard.dataset.exampleCollection] || [])[Number(merchCard.dataset.merchCard)];
       var merchImage = merchCard.querySelector(".merch-example-preview img");
       var variant = merchExample && merchExample.variants[Number(merchVariant.dataset.merchVariant)];
       if (variant && merchImage) {
@@ -571,7 +620,7 @@
     var merchPreview = event.target.closest("[data-merch-preview]");
     if (merchPreview) {
       var merchPreviewCard = merchPreview.closest("[data-merch-card]");
-      var merchPreviewData = (data.merchExamples || [])[Number(merchPreviewCard.dataset.merchCard)];
+      var merchPreviewData = (data[merchPreviewCard.dataset.exampleCollection] || [])[Number(merchPreviewCard.dataset.merchCard)];
       var currentImage = merchPreview.querySelector("img");
       var merchDialog = merchPreview.closest(".page").querySelector("[data-example-lightbox]");
       if (merchDialog && currentImage) {
@@ -647,6 +696,7 @@
   loadChecklistState();
   renderChecklists();
   initNavigation();
+  normalizeTocNumbering();
   initMobileToc();
   enhanceSearchFields();
   initAccordions();

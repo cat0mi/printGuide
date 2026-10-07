@@ -21,6 +21,34 @@ const bootstrap = await readFile(new URL("../bootstrap.js", import.meta.url), "u
 const pdfChecklist = await readFile(new URL("../pdf-checklist.js", import.meta.url), "utf8");
 const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 
+const chapterSources = [chapterOne, chapterTwo, chapterThree, chapterFour, chapterFive, chapterSix, chapterSeven, chapterEight, chapterNine, chapterTen];
+
+test("нумерация содержания всех глав последовательна и все якоря существуют", () => {
+  chapterSources.forEach((source, chapterIndex) => {
+    const chapterNumber = chapterIndex + 1;
+    const links = Array.from(source.matchAll(/<a class="toc-link" href="#\/chapter-\d+\/([^"]+)">\s*([^<]+)<\/a>/g));
+
+    assert.ok(links.length > 0, `У главы ${chapterNumber} нет пунктов содержания`);
+    links.forEach((match) => {
+      const sectionId = match[1];
+      const escapedId = sectionId.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+      assert.match(source, new RegExp(`id="${escapedId}"`), `Не найден якорь #${sectionId} в главе ${chapterNumber}`);
+    });
+  });
+  assert.match(app, /function normalizeTocNumbering\(\)/);
+  assert.match(app, /link\.textContent = number \+ "\. " \+ label/);
+  assert.match(app, /normalizeTocNumbering\(\);\s*initMobileToc\(\)/);
+});
+
+test("контент глав центрируется в области справа от бокового меню", () => {
+  assert.match(styles, /grid-template-columns: 260px minmax\(0, 1fr\) minmax\(0, 860px\) 48px 240px minmax\(0, 1fr\)/);
+  assert.match(styles, /\.guide-content \{ grid-column: 3;[^}]*max-width: 860px/);
+  assert.match(styles, /\.chapter-toc \{ grid-column: 5;[^}]*max-width: 240px/);
+  assert.match(styles, /@media \(min-width: 1024px\) and \(max-width: 1199px\)[\s\S]*?\.guide-content, \.guide-content\.narrow \{ grid-column: 2/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.guide-shell \{ min-height: 100vh; display: block; \}/);
+});
+
 test("главы 3–9 имеют маршруты на главной", () => {
   for (let number = 3; number <= 9; number += 1) assert.match(index, new RegExp('href="#/chapter-' + number + '"'));
   assert.match(app, /renderPlaceholderPages/);
@@ -101,6 +129,29 @@ test("табы фальцовки доступны и переключаются
   assert.match(app, /ArrowRight[\s\S]*?ArrowLeft[\s\S]*?Home[\s\S]*?End/);
 });
 
+test("глава 2 содержит пример флаера на базе карточек мерча", async () => {
+  assert.match(chapterTwo, /id="print-examples"/);
+  assert.match(chapterTwo, /href="#\/chapter-2\/print-examples">14\. Примеры/);
+  assert.match(chapterTwo, /data-print-examples/);
+  assert.match(chapterTwo, /data-example-lightbox/);
+  assert.match(data, /printExamples:/);
+  assert.match(data, /title: "Флаер"/);
+  assert.match(data, /chapter-02-flyer\.jpg/);
+  assert.match(data, /files\/209546/);
+  assert.match(app, /selector: "\[data-print-examples\]", collection: "printExamples"/);
+  assert.match(styles, /\.packaging-example-grid, \.single-example-grid \{ max-width: calc\(\(100% - 18px\) \/ 2\)/);
+  await access(new URL("../assets/examples/chapter-02-flyer.jpg", import.meta.url));
+});
+
+test("превью примеров адаптируются без обрезки на планшетах и мобильных", () => {
+  assert.match(styles, /\.merch-example-preview \{[^}]*height: 430px;[^}]*overflow: hidden/);
+  assert.match(styles, /\.merch-example-preview img \{[^}]*width: auto;[^}]*height: auto;[^}]*max-width: calc\(100% - var\(--example-preview-gutter\)\);[^}]*max-height: calc\(100% - var\(--example-preview-gutter\)\);[^}]*object-fit: contain/);
+  assert.match(styles, /@media \(max-width: 1199px\)[\s\S]*?\.wide-example-preview, \.merch-example-preview \{[\s\S]*?height: clamp\(220px, 36vw, 380px\)[\s\S]*?overflow: hidden/);
+  assert.match(styles, /\.wide-example-preview img, \.merch-example-preview img \{[\s\S]*?width: auto;[\s\S]*?height: auto;[\s\S]*?max-width: calc\(100% - var\(--example-preview-gutter\)\);[\s\S]*?max-height: calc\(100% - var\(--example-preview-gutter\)\);[\s\S]*?object-fit: contain/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.wide-example-preview \{[^}]*height: clamp\(240px, 92vw, 400px\)/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.merch-example-preview \{[^}]*height: clamp\(240px, 92vw, 400px\)/);
+});
+
 test("разделы главы 1 пронумерованы последовательно и ссылки содержания совпадают", () => {
   const headingNumbers = [...chapterOne.matchAll(/<h2 class="section-title"><span>(\d+)\.<\/span>/g)].map((match) => Number(match[1]));
   const sectionIds = [...chapterOne.matchAll(/<section class="guide-section" id="section-(\d+)">/g)].map((match) => Number(match[1]));
@@ -108,6 +159,49 @@ test("разделы главы 1 пронумерованы последова�
   assert.deepEqual(headingNumbers, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
   assert.deepEqual(sectionIds, headingNumbers);
   assert.deepEqual(tocNumbers, headingNumbers.map((number) => [number, number]));
+});
+
+test("раздел о шрифтах содержит практическую инструкцию перевода текста в кривые", () => {
+  const fontSection = chapterOne.match(/<section class="guide-section" id="section-8">([\s\S]*?)<\/section>/)?.[1] || "";
+  assert.match(fontSection, /Как перевести текст в кривые в Illustrator/);
+  assert.equal((fontSection.match(/<li(?: class="outline-shortcuts")?>/g) || []).length, 5);
+  assert.match(fontSection, /Type → Create Outlines/);
+  assert.match(fontSection, /Shift<\/kbd> \+ <kbd>Ctrl/);
+  assert.match(fontSection, /Shift<\/kbd> \+ <kbd>Cmd/);
+  assert.match(fontSection, /Select → Object → Text Objects/);
+  assert.match(fontSection, /не исправляет отсутствующий или подменённый шрифт/);
+});
+
+test("раздел о вылетах содержит практическую инструкцию для Illustrator", () => {
+  const bleedSection = chapterOne.match(/<section class="guide-section" id="section-3">([\s\S]*?)<\/section>\s*<section class="guide-section" id="section-4">/)?.[1] || "";
+  assert.match(bleedSection, /Как задать и изменить вылеты в Illustrator/);
+  assert.match(bleedSection, /File → New/);
+  assert.match(bleedSection, /File → Document Setup/);
+  assert.match(bleedSection, /210 × 297 мм/);
+  assert.match(bleedSection, /3 мм[\s\S]*только если это соответствует требованиям типографии/);
+  assert.match(bleedSection, /Само указание вылетов не растягивает объекты автоматически/);
+  assert.match(bleedSection, /Use Document Bleed Settings/);
+  assert.match(bleedSection, /Установите 0 мм/);
+  assert.match(styles, /\.bleed-layout-rules \.bullet-list li \{ display: list-item; width: 100%; min-width: 0; \}/);
+});
+
+test("схема RGB и CMYK видима в обеих темах и содержит отдельный канал K", () => {
+  const colorSection = chapterOne.match(/<section class="guide-section" id="section-4">([\s\S]*?)<\/section>/)?.[1] || "";
+  assert.equal((colorSection.match(/class="color-venn"/g) || []).length, 2);
+  assert.match(colorSection, /<title id="rgb-title">RGB — экран<\/title>/);
+  assert.match(colorSection, /R — Red · G — Green · B — Blue/);
+  assert.match(colorSection, /<title id="cmyk-title">CMYK — печать<\/title>/);
+  assert.match(colorSection, /C — Cyan · M — Magenta · Y — Yellow · K — Black/);
+  assert.match(colorSection, /class="k-sample"/);
+  assert.match(colorSection, /Схемы условные: RGB показывает смешение света, CMYK — печатные краски\. Чёрная краска K используется отдельно/);
+  ["#ff2028", "#00d92f", "#164cff", "#ffe600", "#ff00d4", "#00e5ef", "#ffffff", "#00dcea", "#f000c8", "#2447e8", "#00b83f", "#f1262d", "#20242b", "#050505"].forEach((color) => assert.match(colorSection, new RegExp(`fill="${color}"`)));
+  assert.equal((colorSection.match(/clipPathUnits="userSpaceOnUse"/g) || []).length, 4);
+  assert.equal((colorSection.match(/<path\b/g) || []).length, 0);
+  assert.match(colorSection, /<g clip-path="url\(#rgb-new-r-clip\)"><g clip-path="url\(#rgb-new-g-clip\)"><circle[^>]+fill="#ffffff"/);
+  assert.match(colorSection, /<g clip-path="url\(#cmyk-new-c-clip\)"><g clip-path="url\(#cmyk-new-m-clip\)"><circle[^>]+fill="#20242b"/);
+  assert.doesNotMatch(styles, /mix-blend-mode/);
+  assert.match(styles, /\.color-venn \.k-sample \{ stroke: #94a3b8; stroke-width: 2px; \}/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.color-models \{[^}]*grid-template-columns: 1fr/);
 });
 
 test("глава 3 загружается как опубликованная полноценная глава", () => {
@@ -130,10 +224,10 @@ test("содержание главы 3 включает 18 разделов и 
 
 test("глава 3 содержит два оптимизированных практических примера", async () => {
   assert.match(chapterThree, /id="examples"/);
-  assert.match(chapterThree, /18\. Практические примеры/);
+  assert.match(chapterThree, /<span>18\.<\/span>ПРАКТИЧЕСКИЕ ПРИМЕРЫ/);
   assert.match(chapterThree, /data-wide-examples/);
   assert.match(data, /wideFormatExamples:/);
-  const wideExamples = data.match(/wideFormatExamples: \[([\s\S]*?)\n    \],\n    merchExamples:/)[1];
+  const wideExamples = data.match(/wideFormatExamples: \[([\s\S]*?)\n    \],\n    printExamples:/)[1];
   assert.equal((wideExamples.match(/nextcloudUrl: "https:\/\/nccl\.opservicegrid\.com\/index\.php\/apps\/files\/files\//g) || []).length, 2);
   assert.match(app, /renderWideFormatExamples/);
   assert.match(app, /loading="lazy"/);
@@ -209,8 +303,37 @@ test("главы 6 и 7 опубликованы и содержат отдел�
   }
 });
 
+test("глава 6 содержит пример коробки на базе карточек мерча", async () => {
+  assert.match(chapterSix, /id="packaging-examples"/);
+  assert.match(chapterSix, /12\. Примеры/);
+  assert.match(chapterSix, /data-packaging-examples/);
+  assert.match(data, /packagingExamples:/);
+  assert.match(data, /title: "Коробка для визиток"/);
+  assert.match(data, /chapter-06-business-card-box\.webp/);
+  assert.match(app, /data-example-collection/);
+  assert.match(styles, /\.packaging-example-grid, \.single-example-grid \{ max-width: calc\(\(100% - 18px\) \/ 2\); grid-template-columns: minmax\(0, 1fr\); \}/);
+  await access(new URL("../assets/examples/chapter-06-business-card-box.webp", import.meta.url));
+});
+
+test("содержание глав 3, 5 и 6 содержит по одной корректной ссылке на примеры", () => {
+  const configs = [
+    { source: chapterThree, href: "#/chapter-3/examples", number: 18, previous: "#/chapter-3/wide-export", next: "#/chapter-3/wide-errors" },
+    { source: chapterFive, href: "#/chapter-5/merch-examples", number: 11, previous: "#/chapter-5/merch-folders", next: "#/chapter-5/merch-errors" },
+    { source: chapterSix, href: "#/chapter-6/packaging-examples", number: 12, previous: "#/chapter-6/packaging-errors", next: "#/chapter-6/packaging-final" }
+  ];
+  configs.forEach(({ source, href, number, previous, next }) => {
+    const escapedHref = href.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    assert.equal((source.match(new RegExp('class="toc-link" href="' + escapedHref + '"', "g")) || []).length, 1);
+    assert.match(source, new RegExp('href="' + escapedHref + '">' + number + '\\. Примеры<'));
+    assert.ok(source.indexOf('href="' + previous + '"') < source.indexOf('href="' + href + '"'));
+    assert.ok(source.indexOf('href="' + href + '"') < source.indexOf('href="' + next + '"'));
+  });
+  assert.match(app, /desktopToc\.querySelectorAll\("\.toc-link"\)/);
+  assert.match(app, /mobile-toc-panel/);
+});
+
 test("главы 6 и 7 содержат полную навигацию без заглушек", () => {
-  assert.equal((chapterSix.match(/class="toc-link"/g) || []).length, 13);
+  assert.equal((chapterSix.match(/class="toc-link"/g) || []).length, 14);
   assert.equal((chapterSeven.match(/class="toc-link"/g) || []).length, 14);
   assert.match(chapterSix, /href="#\/chapter-5"/);
   assert.match(chapterSix, /href="#\/chapter-7"/);

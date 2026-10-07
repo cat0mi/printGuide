@@ -57,6 +57,16 @@
         alt: "Горизонтальный бэкдроп MEGA:PARI и Magnate с повторяющимся паттерном логотипов"
       }
     ],
+    printExamples: [
+      {
+        title: "Флаер",
+        description: "Пример оформления флаера. Превью показывает готовый дизайн, файлы проекта доступны в Nextcloud.",
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/209546?dir=/%D0%A1onferences/2026/Sigma%20%26%20SBC/Flyer/flyer_2",
+        variants: [
+          { label: "Превью", preview: "assets/examples/chapter-02-flyer.jpg", width: 1140, height: 1600, alt: "Вертикальный флаер MEGA:PARI Partners с изображением панды, земного шара и QR-кодом" }
+        ]
+      }
+    ],
     merchExamples: [
       {
         title: "Футболка",
@@ -74,6 +84,16 @@
         variants: [
           { label: "Тёмная", preview: "assets/examples/chapter-05-cap-dark.webp", width: 679, height: 679, alt: "Тёмная кепка с логотипом MEGA:PARI" },
           { label: "Светлая", preview: "assets/examples/chapter-05-cap-light.webp", width: 800, height: 800, alt: "Светлая кепка с логотипом MEGA:PARI" }
+        ]
+      }
+    ],
+    packagingExamples: [
+      {
+        title: "Коробка для визиток",
+        description: "Пример оформления коробки для визиток. Мокап показывает внешний вид упаковки, файлы проекта доступны в Nextcloud.",
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/201991?dir=/%D0%A1onferences/2026/Sigma%20%26%20SBC/Box%20for%20business%20cards",
+        variants: [
+          { label: "Превью", preview: "assets/examples/chapter-06-business-card-box.webp", width: 1400, height: 1232, alt: "Мокап чёрной брендированной коробки для визиток MEGA:PARI" }
         ]
       }
     ],
