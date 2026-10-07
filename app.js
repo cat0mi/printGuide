@@ -381,6 +381,42 @@
     document.querySelectorAll("[data-mobile-menu]").forEach(function (menu) { menu.innerHTML = mobileMenuMarkup(); });
   }
 
+  function renderWideFormatExamples() {
+    document.querySelectorAll("[data-wide-examples]").forEach(function (container) {
+      container.innerHTML = (data.wideFormatExamples || []).map(function (example, index) {
+        var details = [["Тип", example.type]].concat(example.details || []);
+        return '<article class="wide-example-card">' +
+          '<button class="wide-example-preview" type="button" data-example-index="' + index + '" aria-label="Увеличить превью: ' + escapeHtml(example.title) + '">' +
+            '<img src="' + escapeHtml(example.preview) + '" alt="' + escapeHtml(example.alt) + '" width="' + example.width + '" height="' + example.height + '" loading="lazy">' +
+            '<span aria-hidden="true">Увеличить ↗</span>' +
+          '</button>' +
+          '<div class="wide-example-body"><h3>' + escapeHtml(example.title) + '</h3><p>' + escapeHtml(example.description) + '</p>' +
+            '<dl class="wide-example-details">' + details.map(function (detail) { return '<div><dt>' + escapeHtml(detail[0]) + '</dt><dd>' + escapeHtml(detail[1]) + '</dd></div>'; }).join("") + '</dl>' +
+            '<div class="wide-example-checks"><strong>На что обратить внимание</strong><ul>' + example.checks.map(function (check) { return '<li>' + escapeHtml(check) + '</li>'; }).join("") + '</ul></div>' +
+            '<a class="button secondary wide-example-link" href="' + escapeHtml(example.nextcloudUrl) + '" target="_blank" rel="noopener noreferrer">Открыть файлы в Nextcloud ↗</a>' +
+          '</div></article>';
+      }).join("");
+    });
+  }
+
+  function renderMerchExamples() {
+    document.querySelectorAll("[data-merch-examples]").forEach(function (container) {
+      container.innerHTML = (data.merchExamples || []).map(function (example, exampleIndex) {
+        var first = example.variants[0];
+        return '<article class="merch-example-card" data-merch-card="' + exampleIndex + '">' +
+          '<button class="merch-example-preview" type="button" data-merch-preview aria-label="Увеличить превью: ' + escapeHtml(example.title) + '">' +
+            '<img src="' + escapeHtml(first.preview) + '" alt="' + escapeHtml(first.alt) + '" width="' + first.width + '" height="' + first.height + '" loading="lazy">' +
+            '<span aria-hidden="true">Увеличить ↗</span>' +
+          '</button>' +
+          '<div class="merch-example-body"><div class="merch-variant-switcher" role="group" aria-label="Варианты превью: ' + escapeHtml(example.title) + '">' +
+            example.variants.map(function (variant, variantIndex) { return '<button type="button" data-merch-variant="' + variantIndex + '" aria-pressed="' + String(variantIndex === 0) + '" class="' + (variantIndex === 0 ? "active" : "") + '">' + escapeHtml(variant.label) + '</button>'; }).join("") +
+          '</div><h3>' + escapeHtml(example.title) + '</h3><p>' + escapeHtml(example.description) + '</p>' +
+          '<a class="button secondary merch-example-link" href="' + escapeHtml(example.nextcloudUrl) + '" target="_blank" rel="noopener noreferrer">Открыть файлы в Nextcloud ↗</a></div>' +
+        '</article>';
+      }).join("");
+    });
+  }
+
   function activateFoldTab(tab, moveFocus) {
     var tabList = tab && tab.closest('[role="tablist"]');
     if (!tabList || !tab.matches("[data-fold-tab]")) return;
@@ -498,6 +534,63 @@
       return;
     }
 
+    var examplePreview = event.target.closest("[data-example-index]");
+    if (examplePreview) {
+      var example = (data.wideFormatExamples || [])[Number(examplePreview.dataset.exampleIndex)];
+      var dialog = document.querySelector("[data-example-lightbox]");
+      if (example && dialog) {
+        var image = dialog.querySelector("[data-example-lightbox-image]");
+        image.src = example.preview;
+        image.alt = example.alt;
+        dialog.querySelector("[data-example-lightbox-caption]").textContent = example.title;
+        dialog.showModal();
+      }
+      return;
+    }
+
+    var merchVariant = event.target.closest("[data-merch-variant]");
+    if (merchVariant) {
+      var merchCard = merchVariant.closest("[data-merch-card]");
+      var merchExample = (data.merchExamples || [])[Number(merchCard.dataset.merchCard)];
+      var merchImage = merchCard.querySelector(".merch-example-preview img");
+      var variant = merchExample && merchExample.variants[Number(merchVariant.dataset.merchVariant)];
+      if (variant && merchImage) {
+        merchImage.src = variant.preview;
+        merchImage.alt = variant.alt;
+        merchImage.width = variant.width;
+        merchImage.height = variant.height;
+        merchCard.querySelectorAll("[data-merch-variant]").forEach(function (button) {
+          var active = button === merchVariant;
+          button.classList.toggle("active", active);
+          button.setAttribute("aria-pressed", String(active));
+        });
+      }
+      return;
+    }
+
+    var merchPreview = event.target.closest("[data-merch-preview]");
+    if (merchPreview) {
+      var merchPreviewCard = merchPreview.closest("[data-merch-card]");
+      var merchPreviewData = (data.merchExamples || [])[Number(merchPreviewCard.dataset.merchCard)];
+      var currentImage = merchPreview.querySelector("img");
+      var merchDialog = merchPreview.closest(".page").querySelector("[data-example-lightbox]");
+      if (merchDialog && currentImage) {
+        var lightboxImage = merchDialog.querySelector("[data-example-lightbox-image]");
+        lightboxImage.src = currentImage.src;
+        lightboxImage.alt = currentImage.alt;
+        merchDialog.querySelector("[data-example-lightbox-caption]").textContent = merchPreviewData.title;
+        merchDialog.showModal();
+      }
+      return;
+    }
+
+    if (event.target.closest("[data-example-close]")) {
+      event.target.closest("[data-example-lightbox]").close();
+      return;
+    }
+
+    if (event.target.matches("[data-example-lightbox]")) event.target.close();
+
     var orientation = event.target.closest("[data-orientation]");
     if (orientation) {
       orientation.parentElement.querySelectorAll("[data-orientation]").forEach(function (button) { button.classList.toggle("active", button === orientation); button.setAttribute("aria-pressed", String(button === orientation)); });
@@ -549,6 +642,8 @@
   window.addEventListener("hashchange", activateRoute);
 
   renderPlaceholderPages();
+  renderWideFormatExamples();
+  renderMerchExamples();
   loadChecklistState();
   renderChecklists();
   initNavigation();

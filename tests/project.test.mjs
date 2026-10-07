@@ -118,14 +118,28 @@ test("глава 3 загружается как опубликованная п
   assert.match(chapterThree, /data-checklist="chapter-3:final"/);
 });
 
-test("содержание главы 3 включает 17 разделов и служебные блоки", () => {
-  for (let number = 1; number <= 17; number += 1) {
+test("содержание главы 3 включает 18 разделов и служебные блоки", () => {
+  for (let number = 1; number <= 18; number += 1) {
     assert.match(chapterThree, new RegExp('<span>' + number + '\\.<\\/span>'));
   }
   assert.match(chapterThree, /quick-check-three/);
   assert.match(chapterThree, /wide-errors/);
   assert.match(chapterThree, /wide-final/);
   assert.doesNotMatch(chapterThree, /toc-link active/);
+});
+
+test("глава 3 содержит два оптимизированных практических примера", async () => {
+  assert.match(chapterThree, /id="examples"/);
+  assert.match(chapterThree, /18\. Практические примеры/);
+  assert.match(chapterThree, /data-wide-examples/);
+  assert.match(data, /wideFormatExamples:/);
+  const wideExamples = data.match(/wideFormatExamples: \[([\s\S]*?)\n    \],\n    merchExamples:/)[1];
+  assert.equal((wideExamples.match(/nextcloudUrl: "https:\/\/nccl\.opservicegrid\.com\/index\.php\/apps\/files\/files\//g) || []).length, 2);
+  assert.match(app, /renderWideFormatExamples/);
+  assert.match(app, /loading="lazy"/);
+  assert.match(app, /target="_blank" rel="noopener noreferrer"/);
+  await access(new URL("../assets/examples/chapter-03-rollup.webp", import.meta.url));
+  await access(new URL("../assets/examples/chapter-03-backdrop.webp", import.meta.url));
 });
 
 test("глава 4 подключена как опубликованная и содержит два чек-листа", () => {
@@ -158,12 +172,27 @@ test("глава 5 опубликована и содержит оба чек-л
 });
 
 test("глава 5 содержит полный набор разделов и соседнюю навигацию", () => {
-  assert.equal((chapterFive.match(/class="toc-link"/g) || []).length, 12);
+  assert.equal((chapterFive.match(/class="toc-link"/g) || []).length, 13);
   assert.match(chapterFive, /merch-method/);
   assert.match(chapterFive, /merch-errors/);
   assert.match(chapterFive, /href="#\/chapter-4"/);
   assert.match(chapterFive, /href="#\/chapter-6"/);
   assert.doesNotMatch(chapterFive, /Глава в разработке/);
+});
+
+test("глава 5 содержит переключаемые примеры футболки и кепки", async () => {
+  assert.match(chapterFive, /id="merch-examples"/);
+  assert.match(chapterFive, /11\. Примеры/);
+  assert.match(data, /merchExamples:/);
+  assert.match(data, /title: "Футболка"/);
+  assert.match(data, /title: "Кепка"/);
+  assert.equal((data.match(/assets\/examples\/chapter-05-[^"]+\.webp/g) || []).length, 4);
+  assert.match(app, /renderMerchExamples/);
+  assert.match(app, /data-merch-variant/);
+  assert.match(app, /aria-pressed/);
+  for (const file of ["tshirt-front", "tshirt-back", "cap-dark", "cap-light"]) {
+    await access(new URL("../assets/examples/chapter-05-" + file + ".webp", import.meta.url));
+  }
 });
 
 test("главы 6 и 7 опубликованы и содержат отдельные чек-листы", () => {

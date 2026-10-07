@@ -486,6 +486,37 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
 .illustrator-tool-card .accordion-content li + li { margin-top: 5px; }
 .illustrator-tool-card .accordion-content code { white-space: normal; overflow-wrap: anywhere; }
 .illustrator-tool-card .accordion-content .tool-warning { padding: 10px 12px; border-left: 3px solid var(--red); background: color-mix(in srgb, var(--red) 7%, transparent); border-radius: 0 8px 8px 0; }
+.wide-examples-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 18px; margin-top: 20px; }
+.wide-example-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.wide-example-preview { position: relative; width: 100%; min-width: 0; border: 0; border-bottom: 1px solid var(--line); padding: 18px; background: var(--surface-2); cursor: zoom-in; }
+.wide-example-preview img { display: block; width: 100%; height: auto; max-height: 560px; margin: auto; object-fit: contain; }
+.wide-example-preview span { position: absolute; right: 12px; bottom: 12px; padding: 6px 9px; border-radius: 999px; background: color-mix(in srgb, var(--surface) 90%, transparent); color: var(--text); font-size: 10px; font-weight: 700; box-shadow: 0 2px 10px color-mix(in srgb, #000 16%, transparent); }
+.wide-example-preview:hover span, .wide-example-preview:focus-visible span { color: var(--cyan); }
+.wide-example-body { padding: 18px; }
+.wide-example-body h3 { margin: 0; font: 700 18px/1.25 "Outfit", sans-serif; }
+.wide-example-body > p { margin: 9px 0 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.wide-example-details { margin: 16px 0 0; border-top: 1px solid var(--line); }
+.wide-example-details div { display: grid; grid-template-columns: minmax(90px, .7fr) minmax(0, 1fr); gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 11px; }
+.wide-example-details dt { color: var(--muted); }.wide-example-details dd { margin: 0; color: var(--text); font-weight: 600; overflow-wrap: anywhere; }
+.wide-example-checks { margin-top: 16px; }.wide-example-checks > strong { color: var(--cyan); font-size: 11px; text-transform: uppercase; letter-spacing: .04em; }
+.wide-example-checks ul { margin: 9px 0 0; padding-left: 18px; color: var(--muted); font-size: 11px; line-height: 1.5; }.wide-example-checks li + li { margin-top: 5px; }
+.wide-example-link { width: 100%; margin-top: 18px; text-align: center; }
+.example-lightbox { max-width: min(92vw, 1400px); max-height: 92vh; border: 1px solid var(--line); border-radius: 14px; padding: 42px 18px 14px; background: var(--surface); color: var(--text); box-shadow: 0 24px 80px #0008; }
+.example-lightbox::backdrop { background: #050912d9; }
+.example-lightbox img { display: block; max-width: calc(92vw - 36px); max-height: calc(92vh - 86px); width: auto; height: auto; margin: auto; object-fit: contain; }
+.example-lightbox p { margin: 10px 0 0; text-align: center; color: var(--muted); font-size: 11px; }
+.example-lightbox-close { position: absolute; top: 8px; right: 10px; width: 32px; height: 32px; border: 0; border-radius: 50%; background: var(--surface-2); color: var(--text); font-size: 24px; line-height: 1; cursor: pointer; }
+.merch-examples-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; gap: 18px; }
+.merch-example-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+.merch-example-preview { position: relative; width: 100%; height: 430px; flex: 0 0 430px; border: 0; border-bottom: 1px solid var(--line); padding: 22px; display: grid; place-items: center; background: var(--surface-2); cursor: zoom-in; }
+.merch-example-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.merch-example-preview span { position: absolute; right: 12px; bottom: 12px; padding: 6px 9px; border-radius: 999px; background: color-mix(in srgb, var(--surface) 90%, transparent); color: var(--text); font-size: 10px; font-weight: 700; box-shadow: 0 2px 10px color-mix(in srgb, #000 16%, transparent); }
+.merch-example-body { flex: 1; display: flex; flex-direction: column; padding: 18px; }
+.merch-variant-switcher { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin-bottom: 16px; padding: 4px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+.merch-variant-switcher button { min-width: 0; border: 0; border-radius: 7px; padding: 8px 10px; background: transparent; color: var(--muted); cursor: pointer; font: 600 11px/1.2 "Geist", sans-serif; }
+.merch-variant-switcher button:hover, .merch-variant-switcher button:focus-visible { color: var(--cyan); }.merch-variant-switcher button.active { background: var(--surface); color: var(--cyan); box-shadow: 0 1px 5px color-mix(in srgb, #000 12%, transparent); }
+.merch-example-body h3 { margin: 0; font: 700 18px/1.25 "Outfit", sans-serif; }.merch-example-body > p { margin: 9px 0 18px; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.merch-example-link { width: 100%; margin-top: auto; text-align: center; }
 .formula-card { border: 1px solid var(--blue); border-radius: 12px; background: color-mix(in srgb, var(--blue) 7%, var(--surface)); padding: 20px; display: flex; flex-direction: column; gap: 10px; }.formula-card small { color: var(--cyan); font-weight: 700; }.formula-card code { color: var(--text); font-size: 18px; }
 .hierarchy-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 18px; display: grid; gap: 10px; }.hierarchy-demo span { display: flex; align-items: center; gap: 12px; color: var(--muted); }.hierarchy-demo b { width: 28px; height: 28px; border-radius: 50%; background: var(--blue); display: grid; place-items: center; color: white; }.hierarchy-demo span:nth-child(2) b { background: var(--cyan); color: #06111a; }.hierarchy-demo span:nth-child(3) b { background: var(--green); }
 .type-demo { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 30px; display: flex; flex-direction: column; gap: 12px; }.type-demo strong { font: 800 34px/1 "Outfit"; }.type-demo span { font-size: 20px; font-weight: 600; }.type-demo small { color: var(--muted); }
@@ -819,6 +850,16 @@ a.chapter-card:hover { transform: translateY(-2px); border-color: var(--blue); b
   .illustrator-tool-card .accordion-content div { font-size: 9px; }
   .illustrator-tool-card .accordion-content { padding-inline: 14px; }
   .illustrator-tool-card.expanded .accordion-content { padding: 0 14px 14px; }
+  .wide-examples-grid { grid-template-columns: 1fr; gap: 12px; }
+  .wide-example-preview { padding: 12px; }
+  .wide-example-preview img { max-height: 70vh; }
+  .wide-example-body { padding: 14px; }
+  .wide-example-body h3 { font-size: 15px; }
+  .wide-example-details div { grid-template-columns: minmax(78px, .65fr) minmax(0, 1fr); }
+  .merch-examples-grid { grid-template-columns: 1fr; gap: 12px; }
+  .merch-example-preview { height: 360px; flex-basis: 360px; padding: 16px; }
+  .merch-example-body { padding: 14px; }
+  .merch-example-body h3 { font-size: 15px; }
   .formula-card { padding: 12px; font-size: 10px; }.formula-card code { font-size: 12px; }
   .hierarchy-demo { padding: 12px; font-size: 10px; }.hierarchy-demo b { width: 23px; height: 23px; }
   .type-demo { padding: 18px; }.type-demo strong { font-size: 21px; }.type-demo span { font-size: 14px; }

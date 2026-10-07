@@ -9,6 +9,74 @@
   window.PRINT_GUIDE_DATA = {
     version: 1,
     nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/dashboard/",
+    wideFormatExamples: [
+      {
+        title: "Ролл-ап MEGA:PARI Partners",
+        type: "Ролл-ап",
+        preview: "assets/examples/chapter-03-rollup.webp",
+        width: 1080,
+        height: 3240,
+        description: "Вертикальный рекламный макет с крупной типографикой, QR-кодом и основным визуальным объектом. Важный контент размещён выше нижней технической зоны конструкции.",
+        details: [
+          ["Ориентация", "Вертикальная"],
+          ["Исходник", "Adobe Illustrator"],
+          ["Готовый файл", "PDF"],
+          ["Материалы", "Превью и связанные изображения"]
+        ],
+        checks: [
+          "Важный текст находится в безопасной зоне.",
+          "Нижняя часть макета учитывает конструкцию ролл-апа.",
+          "QR-код размещён на контрастном фоне.",
+          "Крупный текст читается с расстояния.",
+          "Растровые объекты проверены в финальном размере."
+        ],
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/208699?dir=/%D0%A1onferences/2026/Magnate/digital-pop-up_640x1920",
+        alt: "Вертикальный макет ролл-апа MEGA:PARI Partners с QR-кодом и крупной голубой типографикой"
+      },
+      {
+        title: "Бэкдроп MEGA:PARI × Magnate",
+        type: "Бэкдроп",
+        preview: "assets/examples/chapter-03-backdrop.webp",
+        width: 1600,
+        height: 1333,
+        description: "Горизонтальный бэкдроп с повторяющимся паттерном из логотипов и крупной центральной композицией. Макет рассчитан на фотографирование людей перед конструкцией.",
+        details: [
+          ["Ориентация", "Горизонтальная"],
+          ["Исходник", "Adobe Illustrator"],
+          ["Готовый файл", "PDF"],
+          ["Материалы", "Превью и связанные изображения"]
+        ],
+        checks: [
+          "Логотипы равномерно распределены по всей площади.",
+          "Центральный блок заметен, но не мешает фотографированию.",
+          "Важные элементы не расположены вплотную к краям.",
+          "Паттерн продолжает работать при частичном перекрытии людьми.",
+          "Размеры и безопасные зоны соответствуют конструкции."
+        ],
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/208691?dir=/%D0%A1onferences/2026/Magnate/backdrop_2400x2000",
+        alt: "Горизонтальный бэкдроп MEGA:PARI и Magnate с повторяющимся паттерном логотипов"
+      }
+    ],
+    merchExamples: [
+      {
+        title: "Футболка",
+        description: "Пример оформления брендированной футболки: размещение элементов на передней и задней сторонах.",
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/208745?dir=/%D0%A1onferences/2026/Magnate/merch/02_guest_gift_black",
+        variants: [
+          { label: "Спереди", preview: "assets/examples/chapter-05-tshirt-front.webp", width: 836, height: 1012, alt: "Чёрная брендированная футболка MEGA:PARI на вешалке, вид спереди" },
+          { label: "Сзади", preview: "assets/examples/chapter-05-tshirt-back.webp", width: 850, height: 1011, alt: "Чёрная брендированная футболка MEGA:PARI на вешалке, вид сзади" }
+        ]
+      },
+      {
+        title: "Кепка",
+        description: "Пример оформления брендированной кепки в тёмном и светлом вариантах.",
+        nextcloudUrl: "https://nccl.opservicegrid.com/index.php/apps/files/files/208781?dir=/%D0%A1onferences/2026/Magnate/magnat-megapari-2oct26/caps",
+        variants: [
+          { label: "Тёмная", preview: "assets/examples/chapter-05-cap-dark.webp", width: 679, height: 679, alt: "Тёмная кепка с логотипом MEGA:PARI" },
+          { label: "Светлая", preview: "assets/examples/chapter-05-cap-light.webp", width: 800, height: 800, alt: "Светлая кепка с логотипом MEGA:PARI" }
+        ]
+      }
+    ],
     chapters: [
       {
         id: "chapter-1", number: "01", title: "База знаний", shortTitle: "База",
